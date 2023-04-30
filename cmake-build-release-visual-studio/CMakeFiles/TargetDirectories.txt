@@ -1,3 +1,0 @@
-F:/Netife/NetifeDispatcher/cmake-build-release-visual-studio/CMakeFiles/NetifeDispatcher.dir
-F:/Netife/NetifeDispatcher/cmake-build-release-visual-studio/CMakeFiles/ALL_BUILD.dir
-F:/Netife/NetifeDispatcher/cmake-build-release-visual-studio/CMakeFiles/ZERO_CHECK.dir

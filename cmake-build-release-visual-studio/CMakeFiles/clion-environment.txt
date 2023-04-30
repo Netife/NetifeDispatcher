@@ -1,4 +1,0 @@
-ToolSet: 17.0 (local)@D:\vs\ide
-Options: 
-
-Options:-DCMAKE_TOOLCHAIN_FILE=D:\vcpkg\scripts\buildsystems\vcpkg.cmake
