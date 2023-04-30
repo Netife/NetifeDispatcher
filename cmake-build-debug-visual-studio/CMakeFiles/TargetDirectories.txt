@@ -1,0 +1,3 @@
+F:/Netife/NetifeDispatcher/cmake-build-debug-visual-studio/CMakeFiles/NetifeDispatcher.dir
+F:/Netife/NetifeDispatcher/cmake-build-debug-visual-studio/CMakeFiles/ALL_BUILD.dir
+F:/Netife/NetifeDispatcher/cmake-build-debug-visual-studio/CMakeFiles/ZERO_CHECK.dir

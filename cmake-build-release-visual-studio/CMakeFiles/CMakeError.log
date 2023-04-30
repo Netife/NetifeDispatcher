@@ -1,0 +1,60 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: F:/Netife/NetifeDispatcher/cmake-build-release-visual-studio/CMakeFiles/CMakeScratch/TryCompile-3saxkb
+
+Run Build Command(s):D:/vs/ide/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_f0780.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.5.1+f6fdcf537 for .NET Framework
+
+  用于 x64 的 Microsoft (R) C/C++ 优化编译器 19.35.32217.1 版
+  src.c
+  版权所有(C) Microsoft Corporation。保留所有权利。
+  cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CMAKE_HAVE_LIBC_PTHREAD /D "CMAKE_INTDIR=\"Debug\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f0780.dir\Debug\\" /Fd"cmTC_f0780.dir\Debug\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "F:\Netife\NetifeDispatcher\cmake-build-release-visual-studio\CMakeFiles\CMakeScratch\TryCompile-3saxkb\src.c"
+F:\Netife\NetifeDispatcher\cmake-build-release-visual-studio\CMakeFiles\CMakeScratch\TryCompile-3saxkb\src.c(1,10): fatal  error C1083: 无法打开包括文件: “pthread.h”: No such file or directory [F:\Netife\NetifeDispatcher\cmake-build-release-visual-studio\CMakeFiles\CMakeScratch\TryCompile-3saxkb\cmTC_f0780.vcxproj]
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: F:/Netife/NetifeDispatcher/cmake-build-release-visual-studio/CMakeFiles/CMakeScratch/TryCompile-l0z99d
+
+Run Build Command(s):D:/vs/ide/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_5e58a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.5.1+f6fdcf537 for .NET Framework
+
+  用于 x64 的 Microsoft (R) C/C++ 优化编译器 19.35.32217.1 版
+  CheckFunctionExists.c
+  版权所有(C) Microsoft Corporation。保留所有权利。
+  cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D "CMAKE_INTDIR=\"Debug\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_5e58a.dir\Debug\\" /Fd"cmTC_5e58a.dir\Debug\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "F:\Netife\NetifeDispatcher\cmake-build-release-visual-studio\CMakeFiles\CMakeScratch\TryCompile-l0z99d\CheckFunctionExists.c"
+LINK : fatal error LNK1104: 无法打开文件“pthreads.lib” [F:\Netife\NetifeDispatcher\cmake-build-release-visual-studio\CMakeFiles\CMakeScratch\TryCompile-l0z99d\cmTC_5e58a.vcxproj]
+
+
+
+Determining if the function pthread_create exists in the pthread failed with the following output:
+Change Dir: F:/Netife/NetifeDispatcher/cmake-build-release-visual-studio/CMakeFiles/CMakeScratch/TryCompile-a169d0
+
+Run Build Command(s):D:/vs/ide/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_04d72.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.5.1+f6fdcf537 for .NET Framework
+
+  用于 x64 的 Microsoft (R) C/C++ 优化编译器 19.35.32217.1 版
+  CheckFunctionExists.c
+  版权所有(C) Microsoft Corporation。保留所有权利。
+  cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=pthread_create /D "CMAKE_INTDIR=\"Debug\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_04d72.dir\Debug\\" /Fd"cmTC_04d72.dir\Debug\vc143.pdb" /external:W1 /Gd /TC /errorReport:queue "F:\Netife\NetifeDispatcher\cmake-build-release-visual-studio\CMakeFiles\CMakeScratch\TryCompile-a169d0\CheckFunctionExists.c"
+LINK : fatal error LNK1104: 无法打开文件“pthread.lib” [F:\Netife\NetifeDispatcher\cmake-build-release-visual-studio\CMakeFiles\CMakeScratch\TryCompile-a169d0\cmTC_04d72.vcxproj]
+
+
+
