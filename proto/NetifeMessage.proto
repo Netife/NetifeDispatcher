@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package NetifeMessage;
 
+// Dispatcher 服务
 service NetifeService {
     rpc ProcessProbe (NetifeProbeRequest) returns (NetifeProbeResponse);
     rpc Register (NetifeRegisterRequest) returns (NetifeRegisterResponse);
@@ -9,6 +10,11 @@ service NetifeService {
     rpc Command (NetifePluginCommandRequest) returns (NetifePluginCommandResponse);
     rpc ScriptRegister (NetifeScriptRegisterRequest) returns (NetifeScriptRegisterResponse);
     rpc ScriptDebug (NetifeScriptDebuggerRequest) returns (NetifeScriptDebuggerResponse);
+}
+
+// 消息上报
+service NetifePost{
+    rpc UploadRequest (NetifeProbeRequest) returns (NetifeProbeResponse);
 }
 
 // 定义 Netife Probe 的请求信息的数据结构
@@ -26,31 +32,53 @@ message NetifeProbeRequest {
         OTHER = 5; //[本字段保留以便于扩展] 其他
     }
 
+    RequestType request_type = 2;
+
     //数据标注
     enum ApplicationType {
         CLIENT = 0; // 表示本消息为客户端请求
         SERVER = 1; // 表示本消息为服务器响应
     }
 
-    string ip_addr = 2; // 数据包的原始云端 IP 地址
-    string ip_port = 3; // 数据包的原始云端 PORT 地址
+    ApplicationType application_type = 3;
 
-    optional bool ws_is_raw_text = 4; // [WS/WSS下存在本字段] 如果WS为 Binary Stream 本布尔为 True
+    //协议类型
+    enum Protocol {
+        TCP = 0;
+        UDP = 1;
+    }
 
-    optional int32 uuid_sub = 5; // 如果是 WS / WSS ，那么此表示的是发送顺序，且标号是单独的
+    Protocol protocol = 4;
+
+    string dst_ip_addr = 5; // 数据包的原始云端 IP 地址
+
+    string dst_ip_port = 6; // 数据包的原始云端 PORT 地址
+
+    string src_ip_addr = 7; // 数据包的来源 IP 地址
+
+    string src_ip_port = 8; // 数据包的来源 PORT
+
+    bool is_raw_text = 9; // 如果内容不为 Binary Stream 本布尔为 True
+
+    optional int32 uuid_sub = 10; // 如果是 WS / WSS ，那么此表示的是发送顺序，且标号是单独的
 
     // 如果是 HTTP / HTTPS 那么就是 Raw Text，如果是 WS / WSS 那么就是 字符数据 或 Binary Steam 的 Hex String 表示
-    string raw_text = 6;
+    string raw_text = 11;
 
-    optional string pid = 7; // [本字段可选] 如果可以抓到进程信息，那么本为其对应的 PID
+    optional string pid = 12; // [本字段可选] 如果可以抓到进程信息，那么本为其对应的 PID
 
+    optional string process_name = 13; // [本字段可选] 如果可以抓到进程信息，那么本为其对应的进程名称
 }
 
 // 定义返回给 Netife Probe 信息的数据结构
 message NetifeProbeResponse {
     string uuid = 1; // UUID 回显，本 UUID 与gRpc请求的 UUID相同
 
-    string response_text = 2; // 返回修改后的 ResponseText。
+    string dst_ip_addr = 2; // 返回修改后的发送 IP 地址
+
+    string dst_ip_port = 3; // 返回修改后的发送 PORT 地址
+
+    string response_text = 4; // 返回修改后的 ResponseText。
                               // HTTP / HTTPS 对应的是 Raw Request，WS / WSS 对应的是 String 或 Binary Stream 的 Hex String 表示
 }
 
@@ -76,26 +104,35 @@ message NetifeComposerRequest {
         WSS = 3;
     }
 
-    string ip_addr = 2; // 表示请求地址
+    ProtocolType protocol_type = 2;
 
-    string ip_port = 3; // 表示请求端口
+    string dst_ip_addr = 3; // 数据包的原始云端 IP 地址
 
-    optional bool ws_is_raw_text = 4; // [WS/WSS下存在本字段] 如果WS为 Binary Stream 本布尔为 True
+    string dst_ip_port = 4; // 数据包的原始云端 PORT 地址
 
-    optional int32 uuid_sub = 5; // 如果是 WS / WSS ，那么此表示的是发送顺序，且标号是单独的
+    string src_ip_addr = 5; // 数据包的来源 IP 地址
+
+    string src_ip_port = 6; // 数据包的来源 PORT
+
+    bool is_raw_text = 7; // [WS/WSS下存在本字段] 如果内容不为 Binary Stream 本布尔为 True
+
+    optional int32 uuid_sub = 8; // 如果是 WS / WSS ，那么此表示的是发送顺序，且标号是单独的
 
     // 如果是 HTTP / HTTPS 那么就是 Raw Text，如果是 WS / WSS 那么就是 字符数据 或 Binary Steam 的 Hex String 表示
-    string raw_text = 6;
+    string raw_text = 9;
 }
 
 // 定义 Netife Composer 返回的信息
 message NetifeComposerResponse {
+
     string uuid = 1; // UUID 回显
+
     string raw_back = 2; // 返回的信息，如果是 HTTP / HTTPS 则为 Raw Text，如果是 WS / WSS 那就是 字符数据 或 Binary Steam 的 Hex String 表示
 }
 
 // 表示触发某个插件的命令，他可能会影响逻辑，也可能只是返回一个信息
 message NetifePluginCommandRequest {
+
     string namespace = 1; // 表示插件的命名空间
 
     string command_prefix = 2; // 表示插件的命令头
@@ -153,7 +190,7 @@ message NetifeScriptDebuggerRequest {
 
 message NetifeScriptDebuggerResponse {
 
-    string ws_addr = 1; // WS 的地址
+    string ws_addr = 1; // 调试使用的 WS 的地址
 
-    string ws_port = 2; // WS 的端口
+    string ws_port = 2; // 调试使用的 WS 的端口
 }
