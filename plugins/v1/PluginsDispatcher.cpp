@@ -149,10 +149,21 @@ namespace Netife {
                     CLOG(INFO, "PluginsDispatcher") << "[" << pluginsDescriptor.name << "]["
                                                     << itMan->name() << "] Name:\"" << netifePlugin->GetName() << "\""
                                                     << " Version\"" << netifePlugin->GetVersion() << "\"";
-                    netifePlugin->OnEnable();
+                    if(!netifePlugin->OnEnable()){
+                        CLOG(WARNING, "PluginsDispatcher") << "[" << pluginsDescriptor.name << "]["
+                                                        << itMan->name() << "] Plugin actively refuse to load.";
+                        //@NETIFE RULE 一个插件的主动拒绝不会导致框架寄掉，但是框架会抛出提示
+                        CLOG(WARNING, "PluginsDispatcher") << "In Netife Rules a plugin actively refuse will not prevent "
+                                                              "the rest plugin load and framework running. However, it maybe cause "
+                                                              "some trouble like relation and command error.";
+                        UnRegisterTargetPluginLibrary(pluginsDescriptor.name + "::" + itMan->name());
+                    }
                     CarryHookPlugin("netife.network.receive"); //Hook插件启动
                 }
             }
+        }
+        for (auto plugin:pluginClassMaps) {
+            plugin.second->OnLoaded();
         }
         return isWholeOk;
     }
@@ -314,5 +325,11 @@ namespace Netife {
     void PluginsDispatcher::UnRegisterTargetSharedLibrary(string pluginName) {
         pluginSharedLibraries[pluginName]->unload();
         pluginSharedLibraries.erase(pluginName);
+    }
+
+    void PluginsDispatcher::ProcessAllPlugins(std::function<void (NetifePlugins*)> const& f) {
+        for (auto plugin:pluginClassMaps) {
+            f(plugin.second);
+        }
     }
 } // Netife

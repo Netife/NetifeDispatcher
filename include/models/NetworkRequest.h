@@ -51,14 +51,14 @@ public:
 
     bool IsRawText; // 如果内容不为 Binary Stream 本布尔为 True
 
-    optional<int> uuid_sub; // 如果是 WS / WSS ，那么此表示的是发送顺序，且标号是单独的
+    optional<int> UUIDSub; // 如果是 WS / WSS ，那么此表示的是发送顺序，且标号是单独的
 
     // 如果是 HTTP / HTTPS 那么就是 Raw Text，如果是 WS / WSS 那么就是 字符数据 或 Binary Steam 的 Hex String 表示
 
-    string raw_text;
+    string RawText;
 
-    optional<string> pid; // [本字段可选] 如果可以抓到进程信息，那么本为其对应的 PID
+    optional<string> Pid; // [本字段可选] 如果可以抓到进程信息，那么本为其对应的 PID
 
-    optional<string> process_name; // [本字段可选] 如果可以抓到进程信息，那么本为其对应的进程名称
+    optional<string> ProcessName; // [本字段可选] 如果可以抓到进程信息，那么本为其对应的进程名称
 };
 #endif //NETIFEDISPATCHER_NETWORKREQUEST_H

@@ -23,7 +23,7 @@ namespace Netife {
             : _stub(NetifePost::NewStub(channel)) {
         }
 
-
+        NetifeProbeResponse UploadRequest(NetifeProbeRequest request);
     };
 
 } // Netife

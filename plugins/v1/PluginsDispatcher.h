@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include <optional>
+#include <functional>
 #include "CommandDescriptor.h"
 #include "HookDescriptor.h"
 #include "PluginsDescriptor.h"
@@ -51,6 +52,7 @@ namespace Netife {
         void CarryHookPlugin(string hookNode);
         void RegisterPluginSharedLibraries(string pluginName, SharedLibrary* sharedLibrary);
         void UnRegisterTargetSharedLibrary(string pluginName);
+        void ProcessAllPlugins(std::function<void (NetifePlugins*)> const& f);
     };
 
 } // Netife

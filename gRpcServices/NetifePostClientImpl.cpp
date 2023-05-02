@@ -6,4 +6,8 @@
 
 namespace Netife {
 
+    NetifeProbeResponse NetifePostClientImpl::UploadRequest(NetifeProbeRequest request) {
+
+        return NetifeProbeResponse();
+    }
 } // Netife
