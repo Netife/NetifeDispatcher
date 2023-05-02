@@ -13,12 +13,14 @@ INITIALIZE_EASYLOGGINGPP;
 #define DEBUG_MODE true
 #define DEBUG_HOST_IP "0.0.0.0"
 #define DEBUG_HOST_PORT "7890"
+#define DEBUG_FRONTEND_IP "0.0.0.0"
+#define DEBUG_FRONTEND_PORT "7891"
 
 using namespace std;
 namespace fs = std::filesystem;
 
 
-void StartServer(const string &host, const string &port);
+void StartServer(const string &host, const string &port, const string& clientHost, const string& clientPort);
 void createDirIfNotExists(string dirName);
 void InitDirectoryStructure();
 
@@ -49,21 +51,24 @@ int main(int argc, char *argv[]) {
 
     string hostIp = DEBUG_HOST_IP;
     string hostPort = DEBUG_HOST_PORT;
-
+    string clientIp = DEBUG_FRONTEND_IP;
+    string clientPort = DEBUG_FRONTEND_PORT;
     if (!DEBUG_MODE) {
         hostIp = argv[1];
-        hostPort = stoi(argv[2]);
+        hostPort = argv[2];
+        clientIp = argv[3];
+        clientPort = argv[4];
     }
 
     // 启动服务器
 
-    StartServer("0.0.0.0", "7890");
+    StartServer(hostIp, hostPort, clientIp, clientPort);
     return 0;
 }
 
-void StartServer(const string &host, const string &port) {
+void StartServer(const string &host, const string &port, const string& clientHost, const string& clientPort) {
     CLOG(INFO, "Loader") << "The dispatcher service will run on the " << host << ":" << port;
-    Netife::NetifeServiceImpl service;
+    Netife::NetifeServiceImpl service(clientHost, clientPort);
     ServerBuilder builder;
     builder.AddListeningPort(host + ":" + port, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);

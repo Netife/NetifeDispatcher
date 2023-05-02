@@ -3,11 +3,17 @@
 //
 
 #include "NetifePostClientImpl.h"
+#include <grpcpp/grpcpp.h>
 
 namespace Netife {
-
-    NetifeProbeResponse NetifePostClientImpl::UploadRequest(NetifeProbeRequest request) {
-
-        return NetifeProbeResponse();
+    optional<NetifeProbeResponse> NetifePostClientImpl::UploadRequest(NetifeProbeRequest request) {
+        NetifeProbeResponse response;
+        ClientContext context;
+        Status status = _stub->UploadRequest(&context, request, &response);
+        if (status.ok()) {
+            return response;
+        } else {
+            return nullopt;
+        }
     }
 } // Netife

@@ -5,7 +5,8 @@
 #ifndef NETIFEDISPATCHER_NETIFEPOSTCLIENTIMPL_H
 #define NETIFEDISPATCHER_NETIFEPOSTCLIENTIMPL_H
 #include "../gRpcModel/NetifeMessage.grpc.pb.h"
-
+#include <optional>
+using namespace std;
 using grpc::ChannelInterface;
 using grpc::ClientContext;
 using grpc::Status;
@@ -22,8 +23,7 @@ namespace Netife {
         explicit NetifePostClientImpl(const std::shared_ptr<ChannelInterface>& channel)
             : _stub(NetifePost::NewStub(channel)) {
         }
-
-        NetifeProbeResponse UploadRequest(NetifeProbeRequest request);
+        optional<NetifeProbeResponse> UploadRequest(NetifeProbeRequest request);
     };
 
 } // Netife

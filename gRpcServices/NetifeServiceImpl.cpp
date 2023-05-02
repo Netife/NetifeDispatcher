@@ -15,7 +15,7 @@ namespace Netife {
         //此处为事件捕获
 
         Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
-            ([&](NetifePlugins* plugins){ canInto = plugins->OnRequestSendingOut(&networkRequest); });
+            ([&](NetifePlugins* plugins){ canInto &= plugins->OnRequestSendingOut(&networkRequest); });
         if (!canInto){
             CLOG(WARNING,"NetifeService") << "The request was cancelled by plugin: " << networkRequest.UUID;
             return Status::CANCELLED;
@@ -29,6 +29,31 @@ namespace Netife {
 
         //此处为发送给前端
 
+        NetifeProbeRequest netifeProbeRequest;
+        TransNetWorkRequest(networkRequest, &netifeProbeRequest);
+        auto netifeResponse = client.UploadRequest(netifeProbeRequest);
+        if (!netifeResponse.has_value()){
+            CLOG(WARNING,"NetifeService") << "The response was cancelled by frontend: " << networkRequest.UUID;
+            return Status::CANCELLED;
+        }
+        NetworkResponse networkResponse = TransNetifeProbeResponse(&(netifeResponse.value()));
+
+        //此处为回调事件捕获
+
+        Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
+            ([&](NetifePlugins* plugins){ canInto &=  plugins->OnResponseBackingIn(&networkResponse); });
+
+
+        if (!canInto){
+            CLOG(WARNING,"NetifeService") << "The response was cancelled by plugin: " << networkRequest.UUID;
+            return Status::CANCELLED;
+        }
+
+        //此处为事件触发
+        //TODO 此处改成多线程调用
+
+        Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
+                ([networkResponse](NetifePlugins* plugins){ plugins->OnResponseTrigger(networkResponse); });
 
         return Status::OK;
     }
@@ -100,7 +125,7 @@ namespace Netife {
         return networkResponse;
     }
 
-    void NetifeServiceImpl::TransNetifeProbeRequest(NetworkRequest networkRequest, NetifeProbeRequest* request) {
+    void NetifeServiceImpl::TransNetWorkRequest(NetworkRequest networkRequest, NetifeProbeRequest* request) {
         request->set_uuid(networkRequest.UUID);
         switch (networkRequest.RequestType) {
             case NetworkRequest::HTTP:
@@ -155,7 +180,7 @@ namespace Netife {
         }
     }
 
-    void NetifeServiceImpl::TransNetifeProbeResponse(NetworkResponse networkResponse, NetifeProbeResponse* response) {
+    void NetifeServiceImpl::TransNetWorkResponse(NetworkResponse networkResponse, NetifeProbeResponse* response) {
         response->set_uuid(networkResponse.UUID);
         response->set_dst_ip_port(networkResponse.DstIpAddr);
         response->set_dst_ip_addr(networkResponse.DstIpPort);
