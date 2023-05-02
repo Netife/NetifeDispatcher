@@ -42,6 +42,7 @@ namespace Netife {
         //单例
         PluginsDispatcher(const PluginsDispatcher&) = delete;
         PluginsDispatcher& operator=(const PluginsDispatcher&) = delete;
+        ~PluginsDispatcher();
         static PluginsDispatcher *Instance();
         bool AutoLoadPlugins();
         bool AutoLoadScripts();

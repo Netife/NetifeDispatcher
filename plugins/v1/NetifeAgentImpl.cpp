@@ -5,18 +5,30 @@
 #include "NetifeAgentImpl.h"
 #include "PluginsDispatcher.h"
 #include "../../lib/log/easylogging++.h"
-NetifePlugins *NetifeAgentImpl::GetRelativePluginRef(const string &pluginsName) {
-    return Netife::PluginsDispatcher::Instance()->GetPluginInstance(pluginsName);
+#include <optional>
+using namespace std;
+std::optional<NetifePlugins *> NetifeAgentImpl::GetRelativePluginRef(const string &pluginsName) {
+    auto instance = Netife::PluginsDispatcher::Instance()->GetPluginInstance(pluginsName);
+    if (instance == nullptr){
+        return nullopt;
+    }
+    return { instance };
 }
 
-const NetifePlugins& NetifeAgentImpl::GetRelativePlugin(const string &pluginsName) {
+std::optional<const NetifePlugins*> NetifeAgentImpl::GetRelativePlugin(const string &pluginsName) {
     const NetifePlugins* netifePlugins = Netife::PluginsDispatcher::Instance()->GetPluginInstance(pluginsName);
-    return *netifePlugins;
+    if (netifePlugins == nullptr){
+        return nullopt;
+    }
+    return { netifePlugins };
 }
 
-std::string NetifeAgentImpl::CarryRelativePluginCommand(const string &pluginsName, const string &command) {
+std::optional<std::string> NetifeAgentImpl::CarryRelativePluginCommand(const string &pluginsName, const string &command) {
     auto plugin = GetRelativePluginRef(pluginsName);
-    return plugin->DispatcherCommand(command);
+    if (!plugin.has_value()){
+        return nullopt;
+    }
+    return { plugin.value()->DispatcherCommand(command) };
 }
 
 void NetifeAgentImpl::LogInfo(const string &name, const string &content) {

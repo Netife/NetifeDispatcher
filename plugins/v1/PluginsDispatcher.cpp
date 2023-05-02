@@ -311,6 +311,10 @@ namespace Netife {
     }
 
     void PluginsDispatcher::UnRegisterTargetPluginClass(string pluginClassName) {
+        if (!pluginClassMaps[pluginClassName]->OnDisable()){
+            CLOG(ERROR, "PluginsDispatcher")
+                    << "Plugin " << pluginClassName << "cause erro when disabled !";
+        }
         delete pluginClassMaps[pluginClassName];
         //@MAYBE-BUG 可能会二次清除同一份地址
         pluginClassMaps.erase(pluginClassName);
@@ -323,6 +327,7 @@ namespace Netife {
 
     void PluginsDispatcher::UnRegisterAllPlugins() {
         for (auto plugin:pluginClassMaps) {
+            plugin.second->OnExiting();
             delete plugin.second;
         }
         for (auto libs:pluginDescriptorLists) {
@@ -450,5 +455,9 @@ namespace Netife {
                 f( ";"+ temp[0] + ";" + temp[1]);
             }
         }
+    }
+
+    PluginsDispatcher::~PluginsDispatcher() {
+        UnRegisterAllPlugins();
     }
 } // Netife

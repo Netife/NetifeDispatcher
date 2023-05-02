@@ -69,7 +69,7 @@ public:
     }
 
     //当准备把脚本的执行结果返回给Dispatcher时 [阻塞流程]
-    virtual bool OnExitScript(const string& script, NetworkResponse* response){
+    virtual bool OnExitScript(const string& script, NetworkRequest* request){
         return true;
     }
 };
