@@ -26,11 +26,17 @@ PROTOBUF_CONSTEXPR NetifeProbeRequest::NetifeProbeRequest(
     /*decltype(_impl_._has_bits_)*/{}
   , /*decltype(_impl_._cached_size_)*/{}
   , /*decltype(_impl_.uuid_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.ip_addr_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.ip_port_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.dst_ip_addr_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.dst_ip_port_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.src_ip_addr_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.src_ip_port_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
   , /*decltype(_impl_.raw_text_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
   , /*decltype(_impl_.pid_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.ws_is_raw_text_)*/false
+  , /*decltype(_impl_.process_name_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.request_type_)*/0
+  , /*decltype(_impl_.application_type_)*/0
+  , /*decltype(_impl_.protocol_)*/0
+  , /*decltype(_impl_.is_raw_text_)*/false
   , /*decltype(_impl_.uuid_sub_)*/0} {}
 struct NetifeProbeRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR NetifeProbeRequestDefaultTypeInternal()
@@ -44,6 +50,8 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORIT
 PROTOBUF_CONSTEXPR NetifeProbeResponse::NetifeProbeResponse(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.uuid_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.dst_ip_addr_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.dst_ip_port_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
   , /*decltype(_impl_.response_text_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct NetifeProbeResponseDefaultTypeInternal {
@@ -87,10 +95,13 @@ PROTOBUF_CONSTEXPR NetifeComposerRequest::NetifeComposerRequest(
     /*decltype(_impl_._has_bits_)*/{}
   , /*decltype(_impl_._cached_size_)*/{}
   , /*decltype(_impl_.uuid_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.ip_addr_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.ip_port_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.dst_ip_addr_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.dst_ip_port_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.src_ip_addr_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.src_ip_port_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
   , /*decltype(_impl_.raw_text_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.ws_is_raw_text_)*/false
+  , /*decltype(_impl_.protocol_type_)*/0
+  , /*decltype(_impl_.is_raw_text_)*/false
   , /*decltype(_impl_.uuid_sub_)*/0} {}
 struct NetifeComposerRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR NetifeComposerRequestDefaultTypeInternal()
@@ -213,7 +224,7 @@ struct NetifeScriptDebuggerResponseDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 NetifeScriptDebuggerResponseDefaultTypeInternal _NetifeScriptDebuggerResponse_default_instance_;
 }  // namespace NetifeMessage
 static ::_pb::Metadata file_level_metadata_NetifeMessage_2eproto[12];
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_NetifeMessage_2eproto[3];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_NetifeMessage_2eproto[4];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_NetifeMessage_2eproto = nullptr;
 
 const uint32_t TableStruct_NetifeMessage_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
@@ -224,19 +235,31 @@ const uint32_t TableStruct_NetifeMessage_2eproto::offsets[] PROTOBUF_SECTION_VAR
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.uuid_),
-  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.ip_addr_),
-  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.ip_port_),
-  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.ws_is_raw_text_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.request_type_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.application_type_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.protocol_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.dst_ip_addr_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.dst_ip_port_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.src_ip_addr_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.src_ip_port_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.is_raw_text_),
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.uuid_sub_),
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.raw_text_),
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.pid_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeRequest, _impl_.process_name_),
   ~0u,
   ~0u,
   ~0u,
-  1,
+  ~0u,
+  ~0u,
+  ~0u,
+  ~0u,
+  ~0u,
+  ~0u,
   2,
   ~0u,
   0,
+  1,
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -244,6 +267,8 @@ const uint32_t TableStruct_NetifeMessage_2eproto::offsets[] PROTOBUF_SECTION_VAR
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeResponse, _impl_.uuid_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeResponse, _impl_.dst_ip_addr_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeResponse, _impl_.dst_ip_port_),
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeProbeResponse, _impl_.response_text_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeRegisterRequest, _internal_metadata_),
@@ -267,16 +292,22 @@ const uint32_t TableStruct_NetifeMessage_2eproto::offsets[] PROTOBUF_SECTION_VAR
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.uuid_),
-  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.ip_addr_),
-  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.ip_port_),
-  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.ws_is_raw_text_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.protocol_type_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.dst_ip_addr_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.dst_ip_port_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.src_ip_addr_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.src_ip_port_),
+  PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.is_raw_text_),
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.uuid_sub_),
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerRequest, _impl_.raw_text_),
   ~0u,
   ~0u,
   ~0u,
+  ~0u,
+  ~0u,
+  ~0u,
+  ~0u,
   0,
-  1,
   ~0u,
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeComposerResponse, _internal_metadata_),
@@ -361,18 +392,18 @@ const uint32_t TableStruct_NetifeMessage_2eproto::offsets[] PROTOBUF_SECTION_VAR
   PROTOBUF_FIELD_OFFSET(::NetifeMessage::NetifeScriptDebuggerResponse, _impl_.ws_port_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 13, -1, sizeof(::NetifeMessage::NetifeProbeRequest)},
-  { 20, -1, -1, sizeof(::NetifeMessage::NetifeProbeResponse)},
-  { 28, -1, -1, sizeof(::NetifeMessage::NetifeRegisterRequest)},
-  { 36, -1, -1, sizeof(::NetifeMessage::NetifeRegisterResponse)},
-  { 43, 55, -1, sizeof(::NetifeMessage::NetifeComposerRequest)},
-  { 61, -1, -1, sizeof(::NetifeMessage::NetifeComposerResponse)},
-  { 69, 80, -1, sizeof(::NetifeMessage::NetifePluginCommandRequest)},
-  { 85, -1, -1, sizeof(::NetifeMessage::NetifePluginCommandResponse)},
-  { 93, 109, -1, sizeof(::NetifeMessage::NetifeScriptRegisterRequest)},
-  { 119, -1, -1, sizeof(::NetifeMessage::NetifeScriptRegisterResponse)},
-  { 127, -1, -1, sizeof(::NetifeMessage::NetifeScriptDebuggerRequest)},
-  { 134, -1, -1, sizeof(::NetifeMessage::NetifeScriptDebuggerResponse)},
+  { 0, 19, -1, sizeof(::NetifeMessage::NetifeProbeRequest)},
+  { 32, -1, -1, sizeof(::NetifeMessage::NetifeProbeResponse)},
+  { 42, -1, -1, sizeof(::NetifeMessage::NetifeRegisterRequest)},
+  { 50, -1, -1, sizeof(::NetifeMessage::NetifeRegisterResponse)},
+  { 57, 72, -1, sizeof(::NetifeMessage::NetifeComposerRequest)},
+  { 81, -1, -1, sizeof(::NetifeMessage::NetifeComposerResponse)},
+  { 89, 100, -1, sizeof(::NetifeMessage::NetifePluginCommandRequest)},
+  { 105, -1, -1, sizeof(::NetifeMessage::NetifePluginCommandResponse)},
+  { 113, 129, -1, sizeof(::NetifeMessage::NetifeScriptRegisterRequest)},
+  { 139, -1, -1, sizeof(::NetifeMessage::NetifeScriptRegisterResponse)},
+  { 147, -1, -1, sizeof(::NetifeMessage::NetifeScriptDebuggerRequest)},
+  { 154, -1, -1, sizeof(::NetifeMessage::NetifeScriptDebuggerResponse)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -391,68 +422,81 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 
 const char descriptor_table_protodef_NetifeMessage_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\023NetifeMessage.proto\022\rNetifeMessage\"\271\002\n"
-  "\022NetifeProbeRequest\022\014\n\004uuid\030\001 \001(\t\022\017\n\007ip_"
-  "addr\030\002 \001(\t\022\017\n\007ip_port\030\003 \001(\t\022\033\n\016ws_is_raw"
-  "_text\030\004 \001(\010H\000\210\001\001\022\025\n\010uuid_sub\030\005 \001(\005H\001\210\001\001\022"
-  "\020\n\010raw_text\030\006 \001(\t\022\020\n\003pid\030\007 \001(\tH\002\210\001\001\"H\n\013R"
-  "equestType\022\010\n\004HTTP\020\000\022\t\n\005HTTPS\020\001\022\006\n\002WS\020\002\022"
-  "\007\n\003WSS\020\003\022\010\n\004PING\020\004\022\t\n\005OTHER\020\005\")\n\017Applica"
-  "tionType\022\n\n\006CLIENT\020\000\022\n\n\006SERVER\020\001B\021\n\017_ws_"
-  "is_raw_textB\013\n\t_uuid_subB\006\n\004_pid\":\n\023Neti"
-  "feProbeResponse\022\014\n\004uuid\030\001 \001(\t\022\025\n\rrespons"
-  "e_text\030\002 \001(\t\"=\n\025NetifeRegisterRequest\022\021\n"
-  "\tgrpc_host\030\001 \001(\t\022\021\n\tgrpc_port\030\002 \001(\t\"(\n\026N"
-  "etifeRegisterResponse\022\016\n\006status\030\001 \001(\010\"\343\001"
-  "\n\025NetifeComposerRequest\022\014\n\004uuid\030\001 \001(\t\022\017\n"
-  "\007ip_addr\030\002 \001(\t\022\017\n\007ip_port\030\003 \001(\t\022\033\n\016ws_is"
-  "_raw_text\030\004 \001(\010H\000\210\001\001\022\025\n\010uuid_sub\030\005 \001(\005H\001"
-  "\210\001\001\022\020\n\010raw_text\030\006 \001(\t\"4\n\014ProtocolType\022\010\n"
-  "\004HTTP\020\000\022\t\n\005HTTPS\020\001\022\006\n\002WS\020\002\022\007\n\003WSS\020\003B\021\n\017_"
-  "ws_is_raw_textB\013\n\t_uuid_sub\"8\n\026NetifeCom"
-  "poserResponse\022\014\n\004uuid\030\001 \001(\t\022\020\n\010raw_back\030"
-  "\002 \001(\t\"\227\001\n\032NetifePluginCommandRequest\022\021\n\t"
-  "namespace\030\001 \001(\t\022\026\n\016command_prefix\030\002 \001(\t\022"
-  "\016\n\006params\030\003 \003(\t\022\021\n\004uuid\030\004 \001(\tH\000\210\001\001\022\025\n\010uu"
-  "id_sub\030\005 \001(\005H\001\210\001\001B\007\n\005_uuidB\013\n\t_uuid_sub\""
-  "=\n\033NetifePluginCommandResponse\022\016\n\006status"
-  "\030\001 \001(\010\022\016\n\006result\030\002 \001(\t\"\337\003\n\033NetifeScriptR"
-  "egisterRequest\022\023\n\013script_name\030\001 \001(\t\022\032\n\022s"
-  "cript_description\030\002 \001(\t\022\031\n\014trigger_addr\030"
-  "\003 \001(\tH\000\210\001\001\022\031\n\014trigger_port\030\004 \001(\tH\001\210\001\001\022!\n"
-  "\024trigger_spread_chain\030\005 \001(\tH\002\210\001\001\022\"\n\025trig"
-  "ger_spread_plugin\030\006 \001(\tH\003\210\001\001\022(\n\033trigger_"
-  "spread_chain_before\030\007 \001(\tH\004\210\001\001\022)\n\034trigge"
-  "r_spread_plugin_before\030\010 \001(\tH\005\210\001\001\022\026\n\016scr"
-  "ipt_content\030\t \001(\t\022\017\n\007version\030\n \001(\tB\017\n\r_t"
-  "rigger_addrB\017\n\r_trigger_portB\027\n\025_trigger"
-  "_spread_chainB\030\n\026_trigger_spread_pluginB"
-  "\036\n\034_trigger_spread_chain_beforeB\037\n\035_trig"
-  "ger_spread_plugin_before\">\n\034NetifeScript"
-  "RegisterResponse\022\016\n\006status\030\001 \001(\010\022\016\n\006resu"
-  "lt\030\002 \001(\t\"2\n\033NetifeScriptDebuggerRequest\022"
-  "\023\n\013script_name\030\001 \001(\t\"@\n\034NetifeScriptDebu"
-  "ggerResponse\022\017\n\007ws_addr\030\001 \001(\t\022\017\n\007ws_port"
-  "\030\002 \001(\t2\315\004\n\rNetifeService\022U\n\014ProcessProbe"
-  "\022!.NetifeMessage.NetifeProbeRequest\032\".Ne"
-  "tifeMessage.NetifeProbeResponse\022W\n\010Regis"
-  "ter\022$.NetifeMessage.NetifeRegisterReques"
-  "t\032%.NetifeMessage.NetifeRegisterResponse"
-  "\022W\n\010Composer\022$.NetifeMessage.NetifeCompo"
-  "serRequest\032%.NetifeMessage.NetifeCompose"
-  "rResponse\022`\n\007Command\022).NetifeMessage.Net"
-  "ifePluginCommandRequest\032*.NetifeMessage."
-  "NetifePluginCommandResponse\022i\n\016ScriptReg"
-  "ister\022*.NetifeMessage.NetifeScriptRegist"
-  "erRequest\032+.NetifeMessage.NetifeScriptRe"
-  "gisterResponse\022f\n\013ScriptDebug\022*.NetifeMe"
-  "ssage.NetifeScriptDebuggerRequest\032+.Neti"
-  "feMessage.NetifeScriptDebuggerResponseb\006"
-  "proto3"
+  "\n\023NetifeMessage.proto\022\rNetifeMessage\"\352\004\n"
+  "\022NetifeProbeRequest\022\014\n\004uuid\030\001 \001(\t\022C\n\014req"
+  "uest_type\030\002 \001(\0162-.NetifeMessage.NetifePr"
+  "obeRequest.RequestType\022K\n\020application_ty"
+  "pe\030\003 \001(\01621.NetifeMessage.NetifeProbeRequ"
+  "est.ApplicationType\022<\n\010protocol\030\004 \001(\0162*."
+  "NetifeMessage.NetifeProbeRequest.Protoco"
+  "l\022\023\n\013dst_ip_addr\030\005 \001(\t\022\023\n\013dst_ip_port\030\006 "
+  "\001(\t\022\023\n\013src_ip_addr\030\007 \001(\t\022\023\n\013src_ip_port\030"
+  "\010 \001(\t\022\023\n\013is_raw_text\030\t \001(\010\022\025\n\010uuid_sub\030\n"
+  " \001(\005H\000\210\001\001\022\020\n\010raw_text\030\013 \001(\t\022\020\n\003pid\030\014 \001(\t"
+  "H\001\210\001\001\022\031\n\014process_name\030\r \001(\tH\002\210\001\001\"H\n\013Requ"
+  "estType\022\010\n\004HTTP\020\000\022\t\n\005HTTPS\020\001\022\006\n\002WS\020\002\022\007\n\003"
+  "WSS\020\003\022\010\n\004PING\020\004\022\t\n\005OTHER\020\005\")\n\017Applicatio"
+  "nType\022\n\n\006CLIENT\020\000\022\n\n\006SERVER\020\001\"\034\n\010Protoco"
+  "l\022\007\n\003TCP\020\000\022\007\n\003UDP\020\001B\013\n\t_uuid_subB\006\n\004_pid"
+  "B\017\n\r_process_name\"d\n\023NetifeProbeResponse"
+  "\022\014\n\004uuid\030\001 \001(\t\022\023\n\013dst_ip_addr\030\002 \001(\t\022\023\n\013d"
+  "st_ip_port\030\003 \001(\t\022\025\n\rresponse_text\030\004 \001(\t\""
+  "=\n\025NetifeRegisterRequest\022\021\n\tgrpc_host\030\001 "
+  "\001(\t\022\021\n\tgrpc_port\030\002 \001(\t\"(\n\026NetifeRegister"
+  "Response\022\016\n\006status\030\001 \001(\010\"\304\002\n\025NetifeCompo"
+  "serRequest\022\014\n\004uuid\030\001 \001(\t\022H\n\rprotocol_typ"
+  "e\030\002 \001(\01621.NetifeMessage.NetifeComposerRe"
+  "quest.ProtocolType\022\023\n\013dst_ip_addr\030\003 \001(\t\022"
+  "\023\n\013dst_ip_port\030\004 \001(\t\022\023\n\013src_ip_addr\030\005 \001("
+  "\t\022\023\n\013src_ip_port\030\006 \001(\t\022\023\n\013is_raw_text\030\007 "
+  "\001(\010\022\025\n\010uuid_sub\030\010 \001(\005H\000\210\001\001\022\020\n\010raw_text\030\t"
+  " \001(\t\"4\n\014ProtocolType\022\010\n\004HTTP\020\000\022\t\n\005HTTPS\020"
+  "\001\022\006\n\002WS\020\002\022\007\n\003WSS\020\003B\013\n\t_uuid_sub\"8\n\026Netif"
+  "eComposerResponse\022\014\n\004uuid\030\001 \001(\t\022\020\n\010raw_b"
+  "ack\030\002 \001(\t\"\227\001\n\032NetifePluginCommandRequest"
+  "\022\021\n\tnamespace\030\001 \001(\t\022\026\n\016command_prefix\030\002 "
+  "\001(\t\022\016\n\006params\030\003 \003(\t\022\021\n\004uuid\030\004 \001(\tH\000\210\001\001\022\025"
+  "\n\010uuid_sub\030\005 \001(\005H\001\210\001\001B\007\n\005_uuidB\013\n\t_uuid_"
+  "sub\"=\n\033NetifePluginCommandResponse\022\016\n\006st"
+  "atus\030\001 \001(\010\022\016\n\006result\030\002 \001(\t\"\337\003\n\033NetifeScr"
+  "iptRegisterRequest\022\023\n\013script_name\030\001 \001(\t\022"
+  "\032\n\022script_description\030\002 \001(\t\022\031\n\014trigger_a"
+  "ddr\030\003 \001(\tH\000\210\001\001\022\031\n\014trigger_port\030\004 \001(\tH\001\210\001"
+  "\001\022!\n\024trigger_spread_chain\030\005 \001(\tH\002\210\001\001\022\"\n\025"
+  "trigger_spread_plugin\030\006 \001(\tH\003\210\001\001\022(\n\033trig"
+  "ger_spread_chain_before\030\007 \001(\tH\004\210\001\001\022)\n\034tr"
+  "igger_spread_plugin_before\030\010 \001(\tH\005\210\001\001\022\026\n"
+  "\016script_content\030\t \001(\t\022\017\n\007version\030\n \001(\tB\017"
+  "\n\r_trigger_addrB\017\n\r_trigger_portB\027\n\025_tri"
+  "gger_spread_chainB\030\n\026_trigger_spread_plu"
+  "ginB\036\n\034_trigger_spread_chain_beforeB\037\n\035_"
+  "trigger_spread_plugin_before\">\n\034NetifeSc"
+  "riptRegisterResponse\022\016\n\006status\030\001 \001(\010\022\016\n\006"
+  "result\030\002 \001(\t\"2\n\033NetifeScriptDebuggerRequ"
+  "est\022\023\n\013script_name\030\001 \001(\t\"@\n\034NetifeScript"
+  "DebuggerResponse\022\017\n\007ws_addr\030\001 \001(\t\022\017\n\007ws_"
+  "port\030\002 \001(\t2\315\004\n\rNetifeService\022U\n\014ProcessP"
+  "robe\022!.NetifeMessage.NetifeProbeRequest\032"
+  "\".NetifeMessage.NetifeProbeResponse\022W\n\010R"
+  "egister\022$.NetifeMessage.NetifeRegisterRe"
+  "quest\032%.NetifeMessage.NetifeRegisterResp"
+  "onse\022W\n\010Composer\022$.NetifeMessage.NetifeC"
+  "omposerRequest\032%.NetifeMessage.NetifeCom"
+  "poserResponse\022`\n\007Command\022).NetifeMessage"
+  ".NetifePluginCommandRequest\032*.NetifeMess"
+  "age.NetifePluginCommandResponse\022i\n\016Scrip"
+  "tRegister\022*.NetifeMessage.NetifeScriptRe"
+  "gisterRequest\032+.NetifeMessage.NetifeScri"
+  "ptRegisterResponse\022f\n\013ScriptDebug\022*.Neti"
+  "feMessage.NetifeScriptDebuggerRequest\032+."
+  "NetifeMessage.NetifeScriptDebuggerRespon"
+  "se2d\n\nNetifePost\022V\n\rUploadRequest\022!.Neti"
+  "feMessage.NetifeProbeRequest\032\".NetifeMes"
+  "sage.NetifeProbeResponseb\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_NetifeMessage_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_NetifeMessage_2eproto = {
-    false, false, 2286, descriptor_table_protodef_NetifeMessage_2eproto,
+    false, false, 2832, descriptor_table_protodef_NetifeMessage_2eproto,
     "NetifeMessage.proto",
     &descriptor_table_NetifeMessage_2eproto_once, nullptr, 0, 12,
     schemas, file_default_instances, TableStruct_NetifeMessage_2eproto::offsets,
@@ -516,9 +560,30 @@ constexpr NetifeProbeRequest_ApplicationType NetifeProbeRequest::ApplicationType
 constexpr NetifeProbeRequest_ApplicationType NetifeProbeRequest::ApplicationType_MAX;
 constexpr int NetifeProbeRequest::ApplicationType_ARRAYSIZE;
 #endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* NetifeComposerRequest_ProtocolType_descriptor() {
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* NetifeProbeRequest_Protocol_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_NetifeMessage_2eproto);
   return file_level_enum_descriptors_NetifeMessage_2eproto[2];
+}
+bool NetifeProbeRequest_Protocol_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#if (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
+constexpr NetifeProbeRequest_Protocol NetifeProbeRequest::TCP;
+constexpr NetifeProbeRequest_Protocol NetifeProbeRequest::UDP;
+constexpr NetifeProbeRequest_Protocol NetifeProbeRequest::Protocol_MIN;
+constexpr NetifeProbeRequest_Protocol NetifeProbeRequest::Protocol_MAX;
+constexpr int NetifeProbeRequest::Protocol_ARRAYSIZE;
+#endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* NetifeComposerRequest_ProtocolType_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_NetifeMessage_2eproto);
+  return file_level_enum_descriptors_NetifeMessage_2eproto[3];
 }
 bool NetifeComposerRequest_ProtocolType_IsValid(int value) {
   switch (value) {
@@ -547,14 +612,14 @@ constexpr int NetifeComposerRequest::ProtocolType_ARRAYSIZE;
 class NetifeProbeRequest::_Internal {
  public:
   using HasBits = decltype(std::declval<NetifeProbeRequest>()._impl_._has_bits_);
-  static void set_has_ws_is_raw_text(HasBits* has_bits) {
-    (*has_bits)[0] |= 2u;
-  }
   static void set_has_uuid_sub(HasBits* has_bits) {
     (*has_bits)[0] |= 4u;
   }
   static void set_has_pid(HasBits* has_bits) {
     (*has_bits)[0] |= 1u;
+  }
+  static void set_has_process_name(HasBits* has_bits) {
+    (*has_bits)[0] |= 2u;
   }
 };
 
@@ -571,11 +636,17 @@ NetifeProbeRequest::NetifeProbeRequest(const NetifeProbeRequest& from)
       decltype(_impl_._has_bits_){from._impl_._has_bits_}
     , /*decltype(_impl_._cached_size_)*/{}
     , decltype(_impl_.uuid_){}
-    , decltype(_impl_.ip_addr_){}
-    , decltype(_impl_.ip_port_){}
+    , decltype(_impl_.dst_ip_addr_){}
+    , decltype(_impl_.dst_ip_port_){}
+    , decltype(_impl_.src_ip_addr_){}
+    , decltype(_impl_.src_ip_port_){}
     , decltype(_impl_.raw_text_){}
     , decltype(_impl_.pid_){}
-    , decltype(_impl_.ws_is_raw_text_){}
+    , decltype(_impl_.process_name_){}
+    , decltype(_impl_.request_type_){}
+    , decltype(_impl_.application_type_){}
+    , decltype(_impl_.protocol_){}
+    , decltype(_impl_.is_raw_text_){}
     , decltype(_impl_.uuid_sub_){}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
@@ -587,20 +658,36 @@ NetifeProbeRequest::NetifeProbeRequest(const NetifeProbeRequest& from)
     _this->_impl_.uuid_.Set(from._internal_uuid(), 
       _this->GetArenaForAllocation());
   }
-  _impl_.ip_addr_.InitDefault();
+  _impl_.dst_ip_addr_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.ip_addr_.Set("", GetArenaForAllocation());
+    _impl_.dst_ip_addr_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_ip_addr().empty()) {
-    _this->_impl_.ip_addr_.Set(from._internal_ip_addr(), 
+  if (!from._internal_dst_ip_addr().empty()) {
+    _this->_impl_.dst_ip_addr_.Set(from._internal_dst_ip_addr(), 
       _this->GetArenaForAllocation());
   }
-  _impl_.ip_port_.InitDefault();
+  _impl_.dst_ip_port_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.ip_port_.Set("", GetArenaForAllocation());
+    _impl_.dst_ip_port_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_ip_port().empty()) {
-    _this->_impl_.ip_port_.Set(from._internal_ip_port(), 
+  if (!from._internal_dst_ip_port().empty()) {
+    _this->_impl_.dst_ip_port_.Set(from._internal_dst_ip_port(), 
+      _this->GetArenaForAllocation());
+  }
+  _impl_.src_ip_addr_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.src_ip_addr_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_src_ip_addr().empty()) {
+    _this->_impl_.src_ip_addr_.Set(from._internal_src_ip_addr(), 
+      _this->GetArenaForAllocation());
+  }
+  _impl_.src_ip_port_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.src_ip_port_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_src_ip_port().empty()) {
+    _this->_impl_.src_ip_port_.Set(from._internal_src_ip_port(), 
       _this->GetArenaForAllocation());
   }
   _impl_.raw_text_.InitDefault();
@@ -619,9 +706,17 @@ NetifeProbeRequest::NetifeProbeRequest(const NetifeProbeRequest& from)
     _this->_impl_.pid_.Set(from._internal_pid(), 
       _this->GetArenaForAllocation());
   }
-  ::memcpy(&_impl_.ws_is_raw_text_, &from._impl_.ws_is_raw_text_,
+  _impl_.process_name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.process_name_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (from._internal_has_process_name()) {
+    _this->_impl_.process_name_.Set(from._internal_process_name(), 
+      _this->GetArenaForAllocation());
+  }
+  ::memcpy(&_impl_.request_type_, &from._impl_.request_type_,
     static_cast<size_t>(reinterpret_cast<char*>(&_impl_.uuid_sub_) -
-    reinterpret_cast<char*>(&_impl_.ws_is_raw_text_)) + sizeof(_impl_.uuid_sub_));
+    reinterpret_cast<char*>(&_impl_.request_type_)) + sizeof(_impl_.uuid_sub_));
   // @@protoc_insertion_point(copy_constructor:NetifeMessage.NetifeProbeRequest)
 }
 
@@ -633,24 +728,38 @@ inline void NetifeProbeRequest::SharedCtor(
       decltype(_impl_._has_bits_){}
     , /*decltype(_impl_._cached_size_)*/{}
     , decltype(_impl_.uuid_){}
-    , decltype(_impl_.ip_addr_){}
-    , decltype(_impl_.ip_port_){}
+    , decltype(_impl_.dst_ip_addr_){}
+    , decltype(_impl_.dst_ip_port_){}
+    , decltype(_impl_.src_ip_addr_){}
+    , decltype(_impl_.src_ip_port_){}
     , decltype(_impl_.raw_text_){}
     , decltype(_impl_.pid_){}
-    , decltype(_impl_.ws_is_raw_text_){false}
+    , decltype(_impl_.process_name_){}
+    , decltype(_impl_.request_type_){0}
+    , decltype(_impl_.application_type_){0}
+    , decltype(_impl_.protocol_){0}
+    , decltype(_impl_.is_raw_text_){false}
     , decltype(_impl_.uuid_sub_){0}
   };
   _impl_.uuid_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
     _impl_.uuid_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  _impl_.ip_addr_.InitDefault();
+  _impl_.dst_ip_addr_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.ip_addr_.Set("", GetArenaForAllocation());
+    _impl_.dst_ip_addr_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  _impl_.ip_port_.InitDefault();
+  _impl_.dst_ip_port_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.ip_port_.Set("", GetArenaForAllocation());
+    _impl_.dst_ip_port_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.src_ip_addr_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.src_ip_addr_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.src_ip_port_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.src_ip_port_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   _impl_.raw_text_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
@@ -659,6 +768,10 @@ inline void NetifeProbeRequest::SharedCtor(
   _impl_.pid_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
     _impl_.pid_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.process_name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.process_name_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
@@ -674,10 +787,13 @@ NetifeProbeRequest::~NetifeProbeRequest() {
 inline void NetifeProbeRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   _impl_.uuid_.Destroy();
-  _impl_.ip_addr_.Destroy();
-  _impl_.ip_port_.Destroy();
+  _impl_.dst_ip_addr_.Destroy();
+  _impl_.dst_ip_port_.Destroy();
+  _impl_.src_ip_addr_.Destroy();
+  _impl_.src_ip_port_.Destroy();
   _impl_.raw_text_.Destroy();
   _impl_.pid_.Destroy();
+  _impl_.process_name_.Destroy();
 }
 
 void NetifeProbeRequest::SetCachedSize(int size) const {
@@ -691,18 +807,24 @@ void NetifeProbeRequest::Clear() {
   (void) cached_has_bits;
 
   _impl_.uuid_.ClearToEmpty();
-  _impl_.ip_addr_.ClearToEmpty();
-  _impl_.ip_port_.ClearToEmpty();
+  _impl_.dst_ip_addr_.ClearToEmpty();
+  _impl_.dst_ip_port_.ClearToEmpty();
+  _impl_.src_ip_addr_.ClearToEmpty();
+  _impl_.src_ip_port_.ClearToEmpty();
   _impl_.raw_text_.ClearToEmpty();
   cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    _impl_.pid_.ClearNonDefaultToEmpty();
+  if (cached_has_bits & 0x00000003u) {
+    if (cached_has_bits & 0x00000001u) {
+      _impl_.pid_.ClearNonDefaultToEmpty();
+    }
+    if (cached_has_bits & 0x00000002u) {
+      _impl_.process_name_.ClearNonDefaultToEmpty();
+    }
   }
-  if (cached_has_bits & 0x00000006u) {
-    ::memset(&_impl_.ws_is_raw_text_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&_impl_.uuid_sub_) -
-        reinterpret_cast<char*>(&_impl_.ws_is_raw_text_)) + sizeof(_impl_.uuid_sub_));
-  }
+  ::memset(&_impl_.request_type_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.is_raw_text_) -
+      reinterpret_cast<char*>(&_impl_.request_type_)) + sizeof(_impl_.is_raw_text_));
+  _impl_.uuid_sub_ = 0;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -724,47 +846,93 @@ const char* NetifeProbeRequest::_InternalParse(const char* ptr, ::_pbi::ParseCon
         } else
           goto handle_unusual;
         continue;
-      // string ip_addr = 2;
+      // .NetifeMessage.NetifeProbeRequest.RequestType request_type = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
-          auto str = _internal_mutable_ip_addr();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeProbeRequest.ip_addr"));
+          _internal_set_request_type(static_cast<::NetifeMessage::NetifeProbeRequest_RequestType>(val));
         } else
           goto handle_unusual;
         continue;
-      // string ip_port = 3;
+      // .NetifeMessage.NetifeProbeRequest.ApplicationType application_type = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
-          auto str = _internal_mutable_ip_port();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeProbeRequest.ip_port"));
+          _internal_set_application_type(static_cast<::NetifeMessage::NetifeProbeRequest_ApplicationType>(val));
         } else
           goto handle_unusual;
         continue;
-      // optional bool ws_is_raw_text = 4;
+      // .NetifeMessage.NetifeProbeRequest.Protocol protocol = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          _Internal::set_has_ws_is_raw_text(&has_bits);
-          _impl_.ws_is_raw_text_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_protocol(static_cast<::NetifeMessage::NetifeProbeRequest_Protocol>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // string dst_ip_addr = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          auto str = _internal_mutable_dst_ip_addr();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeProbeRequest.dst_ip_addr"));
+        } else
+          goto handle_unusual;
+        continue;
+      // string dst_ip_port = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          auto str = _internal_mutable_dst_ip_port();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeProbeRequest.dst_ip_port"));
+        } else
+          goto handle_unusual;
+        continue;
+      // string src_ip_addr = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 58)) {
+          auto str = _internal_mutable_src_ip_addr();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeProbeRequest.src_ip_addr"));
+        } else
+          goto handle_unusual;
+        continue;
+      // string src_ip_port = 8;
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 66)) {
+          auto str = _internal_mutable_src_ip_port();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeProbeRequest.src_ip_port"));
+        } else
+          goto handle_unusual;
+        continue;
+      // bool is_raw_text = 9;
+      case 9:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 72)) {
+          _impl_.is_raw_text_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // optional int32 uuid_sub = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+      // optional int32 uuid_sub = 10;
+      case 10:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 80)) {
           _Internal::set_has_uuid_sub(&has_bits);
           _impl_.uuid_sub_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // string raw_text = 6;
-      case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+      // string raw_text = 11;
+      case 11:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 90)) {
           auto str = _internal_mutable_raw_text();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
@@ -772,13 +940,23 @@ const char* NetifeProbeRequest::_InternalParse(const char* ptr, ::_pbi::ParseCon
         } else
           goto handle_unusual;
         continue;
-      // optional string pid = 7;
-      case 7:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 58)) {
+      // optional string pid = 12;
+      case 12:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 98)) {
           auto str = _internal_mutable_pid();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
           CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeProbeRequest.pid"));
+        } else
+          goto handle_unusual;
+        continue;
+      // optional string process_name = 13;
+      case 13:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 106)) {
+          auto str = _internal_mutable_process_name();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeProbeRequest.process_name"));
         } else
           goto handle_unusual;
         continue;
@@ -822,56 +1000,107 @@ uint8_t* NetifeProbeRequest::_InternalSerialize(
         1, this->_internal_uuid(), target);
   }
 
-  // string ip_addr = 2;
-  if (!this->_internal_ip_addr().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_ip_addr().data(), static_cast<int>(this->_internal_ip_addr().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "NetifeMessage.NetifeProbeRequest.ip_addr");
-    target = stream->WriteStringMaybeAliased(
-        2, this->_internal_ip_addr(), target);
-  }
-
-  // string ip_port = 3;
-  if (!this->_internal_ip_port().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_ip_port().data(), static_cast<int>(this->_internal_ip_port().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "NetifeMessage.NetifeProbeRequest.ip_port");
-    target = stream->WriteStringMaybeAliased(
-        3, this->_internal_ip_port(), target);
-  }
-
-  // optional bool ws_is_raw_text = 4;
-  if (_internal_has_ws_is_raw_text()) {
+  // .NetifeMessage.NetifeProbeRequest.RequestType request_type = 2;
+  if (this->_internal_request_type() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(4, this->_internal_ws_is_raw_text(), target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+      2, this->_internal_request_type(), target);
   }
 
-  // optional int32 uuid_sub = 5;
+  // .NetifeMessage.NetifeProbeRequest.ApplicationType application_type = 3;
+  if (this->_internal_application_type() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+      3, this->_internal_application_type(), target);
+  }
+
+  // .NetifeMessage.NetifeProbeRequest.Protocol protocol = 4;
+  if (this->_internal_protocol() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+      4, this->_internal_protocol(), target);
+  }
+
+  // string dst_ip_addr = 5;
+  if (!this->_internal_dst_ip_addr().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_dst_ip_addr().data(), static_cast<int>(this->_internal_dst_ip_addr().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeProbeRequest.dst_ip_addr");
+    target = stream->WriteStringMaybeAliased(
+        5, this->_internal_dst_ip_addr(), target);
+  }
+
+  // string dst_ip_port = 6;
+  if (!this->_internal_dst_ip_port().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_dst_ip_port().data(), static_cast<int>(this->_internal_dst_ip_port().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeProbeRequest.dst_ip_port");
+    target = stream->WriteStringMaybeAliased(
+        6, this->_internal_dst_ip_port(), target);
+  }
+
+  // string src_ip_addr = 7;
+  if (!this->_internal_src_ip_addr().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_src_ip_addr().data(), static_cast<int>(this->_internal_src_ip_addr().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeProbeRequest.src_ip_addr");
+    target = stream->WriteStringMaybeAliased(
+        7, this->_internal_src_ip_addr(), target);
+  }
+
+  // string src_ip_port = 8;
+  if (!this->_internal_src_ip_port().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_src_ip_port().data(), static_cast<int>(this->_internal_src_ip_port().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeProbeRequest.src_ip_port");
+    target = stream->WriteStringMaybeAliased(
+        8, this->_internal_src_ip_port(), target);
+  }
+
+  // bool is_raw_text = 9;
+  if (this->_internal_is_raw_text() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteBoolToArray(9, this->_internal_is_raw_text(), target);
+  }
+
+  // optional int32 uuid_sub = 10;
   if (_internal_has_uuid_sub()) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(5, this->_internal_uuid_sub(), target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(10, this->_internal_uuid_sub(), target);
   }
 
-  // string raw_text = 6;
+  // string raw_text = 11;
   if (!this->_internal_raw_text().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_raw_text().data(), static_cast<int>(this->_internal_raw_text().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "NetifeMessage.NetifeProbeRequest.raw_text");
     target = stream->WriteStringMaybeAliased(
-        6, this->_internal_raw_text(), target);
+        11, this->_internal_raw_text(), target);
   }
 
-  // optional string pid = 7;
+  // optional string pid = 12;
   if (_internal_has_pid()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_pid().data(), static_cast<int>(this->_internal_pid().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "NetifeMessage.NetifeProbeRequest.pid");
     target = stream->WriteStringMaybeAliased(
-        7, this->_internal_pid(), target);
+        12, this->_internal_pid(), target);
+  }
+
+  // optional string process_name = 13;
+  if (_internal_has_process_name()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_process_name().data(), static_cast<int>(this->_internal_process_name().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeProbeRequest.process_name");
+    target = stream->WriteStringMaybeAliased(
+        13, this->_internal_process_name(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -897,21 +1126,35 @@ size_t NetifeProbeRequest::ByteSizeLong() const {
         this->_internal_uuid());
   }
 
-  // string ip_addr = 2;
-  if (!this->_internal_ip_addr().empty()) {
+  // string dst_ip_addr = 5;
+  if (!this->_internal_dst_ip_addr().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_ip_addr());
+        this->_internal_dst_ip_addr());
   }
 
-  // string ip_port = 3;
-  if (!this->_internal_ip_port().empty()) {
+  // string dst_ip_port = 6;
+  if (!this->_internal_dst_ip_port().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_ip_port());
+        this->_internal_dst_ip_port());
   }
 
-  // string raw_text = 6;
+  // string src_ip_addr = 7;
+  if (!this->_internal_src_ip_addr().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_src_ip_addr());
+  }
+
+  // string src_ip_port = 8;
+  if (!this->_internal_src_ip_port().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_src_ip_port());
+  }
+
+  // string raw_text = 11;
   if (!this->_internal_raw_text().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
@@ -919,25 +1162,50 @@ size_t NetifeProbeRequest::ByteSizeLong() const {
   }
 
   cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000007u) {
-    // optional string pid = 7;
+  if (cached_has_bits & 0x00000003u) {
+    // optional string pid = 12;
     if (cached_has_bits & 0x00000001u) {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
           this->_internal_pid());
     }
 
-    // optional bool ws_is_raw_text = 4;
+    // optional string process_name = 13;
     if (cached_has_bits & 0x00000002u) {
-      total_size += 1 + 1;
-    }
-
-    // optional int32 uuid_sub = 5;
-    if (cached_has_bits & 0x00000004u) {
-      total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_uuid_sub());
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+          this->_internal_process_name());
     }
 
   }
+  // .NetifeMessage.NetifeProbeRequest.RequestType request_type = 2;
+  if (this->_internal_request_type() != 0) {
+    total_size += 1 +
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_request_type());
+  }
+
+  // .NetifeMessage.NetifeProbeRequest.ApplicationType application_type = 3;
+  if (this->_internal_application_type() != 0) {
+    total_size += 1 +
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_application_type());
+  }
+
+  // .NetifeMessage.NetifeProbeRequest.Protocol protocol = 4;
+  if (this->_internal_protocol() != 0) {
+    total_size += 1 +
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_protocol());
+  }
+
+  // bool is_raw_text = 9;
+  if (this->_internal_is_raw_text() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // optional int32 uuid_sub = 10;
+  if (cached_has_bits & 0x00000004u) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_uuid_sub());
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -959,27 +1227,44 @@ void NetifeProbeRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, con
   if (!from._internal_uuid().empty()) {
     _this->_internal_set_uuid(from._internal_uuid());
   }
-  if (!from._internal_ip_addr().empty()) {
-    _this->_internal_set_ip_addr(from._internal_ip_addr());
+  if (!from._internal_dst_ip_addr().empty()) {
+    _this->_internal_set_dst_ip_addr(from._internal_dst_ip_addr());
   }
-  if (!from._internal_ip_port().empty()) {
-    _this->_internal_set_ip_port(from._internal_ip_port());
+  if (!from._internal_dst_ip_port().empty()) {
+    _this->_internal_set_dst_ip_port(from._internal_dst_ip_port());
+  }
+  if (!from._internal_src_ip_addr().empty()) {
+    _this->_internal_set_src_ip_addr(from._internal_src_ip_addr());
+  }
+  if (!from._internal_src_ip_port().empty()) {
+    _this->_internal_set_src_ip_port(from._internal_src_ip_port());
   }
   if (!from._internal_raw_text().empty()) {
     _this->_internal_set_raw_text(from._internal_raw_text());
   }
   cached_has_bits = from._impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000007u) {
+  if (cached_has_bits & 0x00000003u) {
     if (cached_has_bits & 0x00000001u) {
       _this->_internal_set_pid(from._internal_pid());
     }
     if (cached_has_bits & 0x00000002u) {
-      _this->_impl_.ws_is_raw_text_ = from._impl_.ws_is_raw_text_;
+      _this->_internal_set_process_name(from._internal_process_name());
     }
-    if (cached_has_bits & 0x00000004u) {
-      _this->_impl_.uuid_sub_ = from._impl_.uuid_sub_;
-    }
-    _this->_impl_._has_bits_[0] |= cached_has_bits;
+  }
+  if (from._internal_request_type() != 0) {
+    _this->_internal_set_request_type(from._internal_request_type());
+  }
+  if (from._internal_application_type() != 0) {
+    _this->_internal_set_application_type(from._internal_application_type());
+  }
+  if (from._internal_protocol() != 0) {
+    _this->_internal_set_protocol(from._internal_protocol());
+  }
+  if (from._internal_is_raw_text() != 0) {
+    _this->_internal_set_is_raw_text(from._internal_is_raw_text());
+  }
+  if (cached_has_bits & 0x00000004u) {
+    _this->_internal_set_uuid_sub(from._internal_uuid_sub());
   }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1006,12 +1291,20 @@ void NetifeProbeRequest::InternalSwap(NetifeProbeRequest* other) {
       &other->_impl_.uuid_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.ip_addr_, lhs_arena,
-      &other->_impl_.ip_addr_, rhs_arena
+      &_impl_.dst_ip_addr_, lhs_arena,
+      &other->_impl_.dst_ip_addr_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.ip_port_, lhs_arena,
-      &other->_impl_.ip_port_, rhs_arena
+      &_impl_.dst_ip_port_, lhs_arena,
+      &other->_impl_.dst_ip_port_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.src_ip_addr_, lhs_arena,
+      &other->_impl_.src_ip_addr_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.src_ip_port_, lhs_arena,
+      &other->_impl_.src_ip_port_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
       &_impl_.raw_text_, lhs_arena,
@@ -1021,12 +1314,16 @@ void NetifeProbeRequest::InternalSwap(NetifeProbeRequest* other) {
       &_impl_.pid_, lhs_arena,
       &other->_impl_.pid_, rhs_arena
   );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.process_name_, lhs_arena,
+      &other->_impl_.process_name_, rhs_arena
+  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(NetifeProbeRequest, _impl_.uuid_sub_)
       + sizeof(NetifeProbeRequest::_impl_.uuid_sub_)
-      - PROTOBUF_FIELD_OFFSET(NetifeProbeRequest, _impl_.ws_is_raw_text_)>(
-          reinterpret_cast<char*>(&_impl_.ws_is_raw_text_),
-          reinterpret_cast<char*>(&other->_impl_.ws_is_raw_text_));
+      - PROTOBUF_FIELD_OFFSET(NetifeProbeRequest, _impl_.request_type_)>(
+          reinterpret_cast<char*>(&_impl_.request_type_),
+          reinterpret_cast<char*>(&other->_impl_.request_type_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata NetifeProbeRequest::GetMetadata() const {
@@ -1052,6 +1349,8 @@ NetifeProbeResponse::NetifeProbeResponse(const NetifeProbeResponse& from)
   NetifeProbeResponse* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       decltype(_impl_.uuid_){}
+    , decltype(_impl_.dst_ip_addr_){}
+    , decltype(_impl_.dst_ip_port_){}
     , decltype(_impl_.response_text_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
@@ -1062,6 +1361,22 @@ NetifeProbeResponse::NetifeProbeResponse(const NetifeProbeResponse& from)
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_uuid().empty()) {
     _this->_impl_.uuid_.Set(from._internal_uuid(), 
+      _this->GetArenaForAllocation());
+  }
+  _impl_.dst_ip_addr_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.dst_ip_addr_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_dst_ip_addr().empty()) {
+    _this->_impl_.dst_ip_addr_.Set(from._internal_dst_ip_addr(), 
+      _this->GetArenaForAllocation());
+  }
+  _impl_.dst_ip_port_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.dst_ip_port_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_dst_ip_port().empty()) {
+    _this->_impl_.dst_ip_port_.Set(from._internal_dst_ip_port(), 
       _this->GetArenaForAllocation());
   }
   _impl_.response_text_.InitDefault();
@@ -1081,12 +1396,22 @@ inline void NetifeProbeResponse::SharedCtor(
   (void)is_message_owned;
   new (&_impl_) Impl_{
       decltype(_impl_.uuid_){}
+    , decltype(_impl_.dst_ip_addr_){}
+    , decltype(_impl_.dst_ip_port_){}
     , decltype(_impl_.response_text_){}
     , /*decltype(_impl_._cached_size_)*/{}
   };
   _impl_.uuid_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
     _impl_.uuid_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.dst_ip_addr_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.dst_ip_addr_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.dst_ip_port_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.dst_ip_port_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   _impl_.response_text_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
@@ -1106,6 +1431,8 @@ NetifeProbeResponse::~NetifeProbeResponse() {
 inline void NetifeProbeResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   _impl_.uuid_.Destroy();
+  _impl_.dst_ip_addr_.Destroy();
+  _impl_.dst_ip_port_.Destroy();
   _impl_.response_text_.Destroy();
 }
 
@@ -1120,6 +1447,8 @@ void NetifeProbeResponse::Clear() {
   (void) cached_has_bits;
 
   _impl_.uuid_.ClearToEmpty();
+  _impl_.dst_ip_addr_.ClearToEmpty();
+  _impl_.dst_ip_port_.ClearToEmpty();
   _impl_.response_text_.ClearToEmpty();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -1140,9 +1469,29 @@ const char* NetifeProbeResponse::_InternalParse(const char* ptr, ::_pbi::ParseCo
         } else
           goto handle_unusual;
         continue;
-      // string response_text = 2;
+      // string dst_ip_addr = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          auto str = _internal_mutable_dst_ip_addr();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeProbeResponse.dst_ip_addr"));
+        } else
+          goto handle_unusual;
+        continue;
+      // string dst_ip_port = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          auto str = _internal_mutable_dst_ip_port();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeProbeResponse.dst_ip_port"));
+        } else
+          goto handle_unusual;
+        continue;
+      // string response_text = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
           auto str = _internal_mutable_response_text();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
@@ -1189,14 +1538,34 @@ uint8_t* NetifeProbeResponse::_InternalSerialize(
         1, this->_internal_uuid(), target);
   }
 
-  // string response_text = 2;
+  // string dst_ip_addr = 2;
+  if (!this->_internal_dst_ip_addr().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_dst_ip_addr().data(), static_cast<int>(this->_internal_dst_ip_addr().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeProbeResponse.dst_ip_addr");
+    target = stream->WriteStringMaybeAliased(
+        2, this->_internal_dst_ip_addr(), target);
+  }
+
+  // string dst_ip_port = 3;
+  if (!this->_internal_dst_ip_port().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_dst_ip_port().data(), static_cast<int>(this->_internal_dst_ip_port().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeProbeResponse.dst_ip_port");
+    target = stream->WriteStringMaybeAliased(
+        3, this->_internal_dst_ip_port(), target);
+  }
+
+  // string response_text = 4;
   if (!this->_internal_response_text().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_response_text().data(), static_cast<int>(this->_internal_response_text().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "NetifeMessage.NetifeProbeResponse.response_text");
     target = stream->WriteStringMaybeAliased(
-        2, this->_internal_response_text(), target);
+        4, this->_internal_response_text(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1222,7 +1591,21 @@ size_t NetifeProbeResponse::ByteSizeLong() const {
         this->_internal_uuid());
   }
 
-  // string response_text = 2;
+  // string dst_ip_addr = 2;
+  if (!this->_internal_dst_ip_addr().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_dst_ip_addr());
+  }
+
+  // string dst_ip_port = 3;
+  if (!this->_internal_dst_ip_port().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_dst_ip_port());
+  }
+
+  // string response_text = 4;
   if (!this->_internal_response_text().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
@@ -1250,6 +1633,12 @@ void NetifeProbeResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, co
   if (!from._internal_uuid().empty()) {
     _this->_internal_set_uuid(from._internal_uuid());
   }
+  if (!from._internal_dst_ip_addr().empty()) {
+    _this->_internal_set_dst_ip_addr(from._internal_dst_ip_addr());
+  }
+  if (!from._internal_dst_ip_port().empty()) {
+    _this->_internal_set_dst_ip_port(from._internal_dst_ip_port());
+  }
   if (!from._internal_response_text().empty()) {
     _this->_internal_set_response_text(from._internal_response_text());
   }
@@ -1275,6 +1664,14 @@ void NetifeProbeResponse::InternalSwap(NetifeProbeResponse* other) {
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
       &_impl_.uuid_, lhs_arena,
       &other->_impl_.uuid_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.dst_ip_addr_, lhs_arena,
+      &other->_impl_.dst_ip_addr_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.dst_ip_port_, lhs_arena,
+      &other->_impl_.dst_ip_port_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
       &_impl_.response_text_, lhs_arena,
@@ -1724,11 +2121,8 @@ void NetifeRegisterResponse::InternalSwap(NetifeRegisterResponse* other) {
 class NetifeComposerRequest::_Internal {
  public:
   using HasBits = decltype(std::declval<NetifeComposerRequest>()._impl_._has_bits_);
-  static void set_has_ws_is_raw_text(HasBits* has_bits) {
-    (*has_bits)[0] |= 1u;
-  }
   static void set_has_uuid_sub(HasBits* has_bits) {
-    (*has_bits)[0] |= 2u;
+    (*has_bits)[0] |= 1u;
   }
 };
 
@@ -1745,10 +2139,13 @@ NetifeComposerRequest::NetifeComposerRequest(const NetifeComposerRequest& from)
       decltype(_impl_._has_bits_){from._impl_._has_bits_}
     , /*decltype(_impl_._cached_size_)*/{}
     , decltype(_impl_.uuid_){}
-    , decltype(_impl_.ip_addr_){}
-    , decltype(_impl_.ip_port_){}
+    , decltype(_impl_.dst_ip_addr_){}
+    , decltype(_impl_.dst_ip_port_){}
+    , decltype(_impl_.src_ip_addr_){}
+    , decltype(_impl_.src_ip_port_){}
     , decltype(_impl_.raw_text_){}
-    , decltype(_impl_.ws_is_raw_text_){}
+    , decltype(_impl_.protocol_type_){}
+    , decltype(_impl_.is_raw_text_){}
     , decltype(_impl_.uuid_sub_){}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
@@ -1760,20 +2157,36 @@ NetifeComposerRequest::NetifeComposerRequest(const NetifeComposerRequest& from)
     _this->_impl_.uuid_.Set(from._internal_uuid(), 
       _this->GetArenaForAllocation());
   }
-  _impl_.ip_addr_.InitDefault();
+  _impl_.dst_ip_addr_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.ip_addr_.Set("", GetArenaForAllocation());
+    _impl_.dst_ip_addr_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_ip_addr().empty()) {
-    _this->_impl_.ip_addr_.Set(from._internal_ip_addr(), 
+  if (!from._internal_dst_ip_addr().empty()) {
+    _this->_impl_.dst_ip_addr_.Set(from._internal_dst_ip_addr(), 
       _this->GetArenaForAllocation());
   }
-  _impl_.ip_port_.InitDefault();
+  _impl_.dst_ip_port_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.ip_port_.Set("", GetArenaForAllocation());
+    _impl_.dst_ip_port_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_ip_port().empty()) {
-    _this->_impl_.ip_port_.Set(from._internal_ip_port(), 
+  if (!from._internal_dst_ip_port().empty()) {
+    _this->_impl_.dst_ip_port_.Set(from._internal_dst_ip_port(), 
+      _this->GetArenaForAllocation());
+  }
+  _impl_.src_ip_addr_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.src_ip_addr_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_src_ip_addr().empty()) {
+    _this->_impl_.src_ip_addr_.Set(from._internal_src_ip_addr(), 
+      _this->GetArenaForAllocation());
+  }
+  _impl_.src_ip_port_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.src_ip_port_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_src_ip_port().empty()) {
+    _this->_impl_.src_ip_port_.Set(from._internal_src_ip_port(), 
       _this->GetArenaForAllocation());
   }
   _impl_.raw_text_.InitDefault();
@@ -1784,9 +2197,9 @@ NetifeComposerRequest::NetifeComposerRequest(const NetifeComposerRequest& from)
     _this->_impl_.raw_text_.Set(from._internal_raw_text(), 
       _this->GetArenaForAllocation());
   }
-  ::memcpy(&_impl_.ws_is_raw_text_, &from._impl_.ws_is_raw_text_,
+  ::memcpy(&_impl_.protocol_type_, &from._impl_.protocol_type_,
     static_cast<size_t>(reinterpret_cast<char*>(&_impl_.uuid_sub_) -
-    reinterpret_cast<char*>(&_impl_.ws_is_raw_text_)) + sizeof(_impl_.uuid_sub_));
+    reinterpret_cast<char*>(&_impl_.protocol_type_)) + sizeof(_impl_.uuid_sub_));
   // @@protoc_insertion_point(copy_constructor:NetifeMessage.NetifeComposerRequest)
 }
 
@@ -1798,23 +2211,34 @@ inline void NetifeComposerRequest::SharedCtor(
       decltype(_impl_._has_bits_){}
     , /*decltype(_impl_._cached_size_)*/{}
     , decltype(_impl_.uuid_){}
-    , decltype(_impl_.ip_addr_){}
-    , decltype(_impl_.ip_port_){}
+    , decltype(_impl_.dst_ip_addr_){}
+    , decltype(_impl_.dst_ip_port_){}
+    , decltype(_impl_.src_ip_addr_){}
+    , decltype(_impl_.src_ip_port_){}
     , decltype(_impl_.raw_text_){}
-    , decltype(_impl_.ws_is_raw_text_){false}
+    , decltype(_impl_.protocol_type_){0}
+    , decltype(_impl_.is_raw_text_){false}
     , decltype(_impl_.uuid_sub_){0}
   };
   _impl_.uuid_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
     _impl_.uuid_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  _impl_.ip_addr_.InitDefault();
+  _impl_.dst_ip_addr_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.ip_addr_.Set("", GetArenaForAllocation());
+    _impl_.dst_ip_addr_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  _impl_.ip_port_.InitDefault();
+  _impl_.dst_ip_port_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.ip_port_.Set("", GetArenaForAllocation());
+    _impl_.dst_ip_port_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.src_ip_addr_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.src_ip_addr_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.src_ip_port_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.src_ip_port_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   _impl_.raw_text_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
@@ -1834,8 +2258,10 @@ NetifeComposerRequest::~NetifeComposerRequest() {
 inline void NetifeComposerRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   _impl_.uuid_.Destroy();
-  _impl_.ip_addr_.Destroy();
-  _impl_.ip_port_.Destroy();
+  _impl_.dst_ip_addr_.Destroy();
+  _impl_.dst_ip_port_.Destroy();
+  _impl_.src_ip_addr_.Destroy();
+  _impl_.src_ip_port_.Destroy();
   _impl_.raw_text_.Destroy();
 }
 
@@ -1850,15 +2276,15 @@ void NetifeComposerRequest::Clear() {
   (void) cached_has_bits;
 
   _impl_.uuid_.ClearToEmpty();
-  _impl_.ip_addr_.ClearToEmpty();
-  _impl_.ip_port_.ClearToEmpty();
+  _impl_.dst_ip_addr_.ClearToEmpty();
+  _impl_.dst_ip_port_.ClearToEmpty();
+  _impl_.src_ip_addr_.ClearToEmpty();
+  _impl_.src_ip_port_.ClearToEmpty();
   _impl_.raw_text_.ClearToEmpty();
-  cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000003u) {
-    ::memset(&_impl_.ws_is_raw_text_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&_impl_.uuid_sub_) -
-        reinterpret_cast<char*>(&_impl_.ws_is_raw_text_)) + sizeof(_impl_.uuid_sub_));
-  }
+  ::memset(&_impl_.protocol_type_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.is_raw_text_) -
+      reinterpret_cast<char*>(&_impl_.protocol_type_)) + sizeof(_impl_.is_raw_text_));
+  _impl_.uuid_sub_ = 0;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -1880,47 +2306,75 @@ const char* NetifeComposerRequest::_InternalParse(const char* ptr, ::_pbi::Parse
         } else
           goto handle_unusual;
         continue;
-      // string ip_addr = 2;
+      // .NetifeMessage.NetifeComposerRequest.ProtocolType protocol_type = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
-          auto str = _internal_mutable_ip_addr();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeComposerRequest.ip_addr"));
+          _internal_set_protocol_type(static_cast<::NetifeMessage::NetifeComposerRequest_ProtocolType>(val));
         } else
           goto handle_unusual;
         continue;
-      // string ip_port = 3;
+      // string dst_ip_addr = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
-          auto str = _internal_mutable_ip_port();
+          auto str = _internal_mutable_dst_ip_addr();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeComposerRequest.ip_port"));
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeComposerRequest.dst_ip_addr"));
         } else
           goto handle_unusual;
         continue;
-      // optional bool ws_is_raw_text = 4;
+      // string dst_ip_port = 4;
       case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          _Internal::set_has_ws_is_raw_text(&has_bits);
-          _impl_.ws_is_raw_text_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+          auto str = _internal_mutable_dst_ip_port();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeComposerRequest.dst_ip_port"));
+        } else
+          goto handle_unusual;
+        continue;
+      // string src_ip_addr = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          auto str = _internal_mutable_src_ip_addr();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeComposerRequest.src_ip_addr"));
+        } else
+          goto handle_unusual;
+        continue;
+      // string src_ip_port = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          auto str = _internal_mutable_src_ip_port();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "NetifeMessage.NetifeComposerRequest.src_ip_port"));
+        } else
+          goto handle_unusual;
+        continue;
+      // bool is_raw_text = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56)) {
+          _impl_.is_raw_text_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // optional int32 uuid_sub = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+      // optional int32 uuid_sub = 8;
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64)) {
           _Internal::set_has_uuid_sub(&has_bits);
           _impl_.uuid_sub_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // string raw_text = 6;
-      case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+      // string raw_text = 9;
+      case 9:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 74)) {
           auto str = _internal_mutable_raw_text();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
@@ -1968,46 +2422,73 @@ uint8_t* NetifeComposerRequest::_InternalSerialize(
         1, this->_internal_uuid(), target);
   }
 
-  // string ip_addr = 2;
-  if (!this->_internal_ip_addr().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_ip_addr().data(), static_cast<int>(this->_internal_ip_addr().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "NetifeMessage.NetifeComposerRequest.ip_addr");
-    target = stream->WriteStringMaybeAliased(
-        2, this->_internal_ip_addr(), target);
-  }
-
-  // string ip_port = 3;
-  if (!this->_internal_ip_port().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_ip_port().data(), static_cast<int>(this->_internal_ip_port().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "NetifeMessage.NetifeComposerRequest.ip_port");
-    target = stream->WriteStringMaybeAliased(
-        3, this->_internal_ip_port(), target);
-  }
-
-  // optional bool ws_is_raw_text = 4;
-  if (_internal_has_ws_is_raw_text()) {
+  // .NetifeMessage.NetifeComposerRequest.ProtocolType protocol_type = 2;
+  if (this->_internal_protocol_type() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(4, this->_internal_ws_is_raw_text(), target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+      2, this->_internal_protocol_type(), target);
   }
 
-  // optional int32 uuid_sub = 5;
+  // string dst_ip_addr = 3;
+  if (!this->_internal_dst_ip_addr().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_dst_ip_addr().data(), static_cast<int>(this->_internal_dst_ip_addr().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeComposerRequest.dst_ip_addr");
+    target = stream->WriteStringMaybeAliased(
+        3, this->_internal_dst_ip_addr(), target);
+  }
+
+  // string dst_ip_port = 4;
+  if (!this->_internal_dst_ip_port().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_dst_ip_port().data(), static_cast<int>(this->_internal_dst_ip_port().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeComposerRequest.dst_ip_port");
+    target = stream->WriteStringMaybeAliased(
+        4, this->_internal_dst_ip_port(), target);
+  }
+
+  // string src_ip_addr = 5;
+  if (!this->_internal_src_ip_addr().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_src_ip_addr().data(), static_cast<int>(this->_internal_src_ip_addr().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeComposerRequest.src_ip_addr");
+    target = stream->WriteStringMaybeAliased(
+        5, this->_internal_src_ip_addr(), target);
+  }
+
+  // string src_ip_port = 6;
+  if (!this->_internal_src_ip_port().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_src_ip_port().data(), static_cast<int>(this->_internal_src_ip_port().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "NetifeMessage.NetifeComposerRequest.src_ip_port");
+    target = stream->WriteStringMaybeAliased(
+        6, this->_internal_src_ip_port(), target);
+  }
+
+  // bool is_raw_text = 7;
+  if (this->_internal_is_raw_text() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteBoolToArray(7, this->_internal_is_raw_text(), target);
+  }
+
+  // optional int32 uuid_sub = 8;
   if (_internal_has_uuid_sub()) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(5, this->_internal_uuid_sub(), target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(8, this->_internal_uuid_sub(), target);
   }
 
-  // string raw_text = 6;
+  // string raw_text = 9;
   if (!this->_internal_raw_text().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_raw_text().data(), static_cast<int>(this->_internal_raw_text().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "NetifeMessage.NetifeComposerRequest.raw_text");
     target = stream->WriteStringMaybeAliased(
-        6, this->_internal_raw_text(), target);
+        9, this->_internal_raw_text(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2033,40 +2514,58 @@ size_t NetifeComposerRequest::ByteSizeLong() const {
         this->_internal_uuid());
   }
 
-  // string ip_addr = 2;
-  if (!this->_internal_ip_addr().empty()) {
+  // string dst_ip_addr = 3;
+  if (!this->_internal_dst_ip_addr().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_ip_addr());
+        this->_internal_dst_ip_addr());
   }
 
-  // string ip_port = 3;
-  if (!this->_internal_ip_port().empty()) {
+  // string dst_ip_port = 4;
+  if (!this->_internal_dst_ip_port().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_ip_port());
+        this->_internal_dst_ip_port());
   }
 
-  // string raw_text = 6;
+  // string src_ip_addr = 5;
+  if (!this->_internal_src_ip_addr().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_src_ip_addr());
+  }
+
+  // string src_ip_port = 6;
+  if (!this->_internal_src_ip_port().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_src_ip_port());
+  }
+
+  // string raw_text = 9;
   if (!this->_internal_raw_text().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
         this->_internal_raw_text());
   }
 
-  cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000003u) {
-    // optional bool ws_is_raw_text = 4;
-    if (cached_has_bits & 0x00000001u) {
-      total_size += 1 + 1;
-    }
-
-    // optional int32 uuid_sub = 5;
-    if (cached_has_bits & 0x00000002u) {
-      total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_uuid_sub());
-    }
-
+  // .NetifeMessage.NetifeComposerRequest.ProtocolType protocol_type = 2;
+  if (this->_internal_protocol_type() != 0) {
+    total_size += 1 +
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_protocol_type());
   }
+
+  // bool is_raw_text = 7;
+  if (this->_internal_is_raw_text() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // optional int32 uuid_sub = 8;
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_uuid_sub());
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -2088,24 +2587,29 @@ void NetifeComposerRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, 
   if (!from._internal_uuid().empty()) {
     _this->_internal_set_uuid(from._internal_uuid());
   }
-  if (!from._internal_ip_addr().empty()) {
-    _this->_internal_set_ip_addr(from._internal_ip_addr());
+  if (!from._internal_dst_ip_addr().empty()) {
+    _this->_internal_set_dst_ip_addr(from._internal_dst_ip_addr());
   }
-  if (!from._internal_ip_port().empty()) {
-    _this->_internal_set_ip_port(from._internal_ip_port());
+  if (!from._internal_dst_ip_port().empty()) {
+    _this->_internal_set_dst_ip_port(from._internal_dst_ip_port());
+  }
+  if (!from._internal_src_ip_addr().empty()) {
+    _this->_internal_set_src_ip_addr(from._internal_src_ip_addr());
+  }
+  if (!from._internal_src_ip_port().empty()) {
+    _this->_internal_set_src_ip_port(from._internal_src_ip_port());
   }
   if (!from._internal_raw_text().empty()) {
     _this->_internal_set_raw_text(from._internal_raw_text());
   }
-  cached_has_bits = from._impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000003u) {
-    if (cached_has_bits & 0x00000001u) {
-      _this->_impl_.ws_is_raw_text_ = from._impl_.ws_is_raw_text_;
-    }
-    if (cached_has_bits & 0x00000002u) {
-      _this->_impl_.uuid_sub_ = from._impl_.uuid_sub_;
-    }
-    _this->_impl_._has_bits_[0] |= cached_has_bits;
+  if (from._internal_protocol_type() != 0) {
+    _this->_internal_set_protocol_type(from._internal_protocol_type());
+  }
+  if (from._internal_is_raw_text() != 0) {
+    _this->_internal_set_is_raw_text(from._internal_is_raw_text());
+  }
+  if (from._internal_has_uuid_sub()) {
+    _this->_internal_set_uuid_sub(from._internal_uuid_sub());
   }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -2132,12 +2636,20 @@ void NetifeComposerRequest::InternalSwap(NetifeComposerRequest* other) {
       &other->_impl_.uuid_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.ip_addr_, lhs_arena,
-      &other->_impl_.ip_addr_, rhs_arena
+      &_impl_.dst_ip_addr_, lhs_arena,
+      &other->_impl_.dst_ip_addr_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.ip_port_, lhs_arena,
-      &other->_impl_.ip_port_, rhs_arena
+      &_impl_.dst_ip_port_, lhs_arena,
+      &other->_impl_.dst_ip_port_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.src_ip_addr_, lhs_arena,
+      &other->_impl_.src_ip_addr_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.src_ip_port_, lhs_arena,
+      &other->_impl_.src_ip_port_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
       &_impl_.raw_text_, lhs_arena,
@@ -2146,9 +2658,9 @@ void NetifeComposerRequest::InternalSwap(NetifeComposerRequest* other) {
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(NetifeComposerRequest, _impl_.uuid_sub_)
       + sizeof(NetifeComposerRequest::_impl_.uuid_sub_)
-      - PROTOBUF_FIELD_OFFSET(NetifeComposerRequest, _impl_.ws_is_raw_text_)>(
-          reinterpret_cast<char*>(&_impl_.ws_is_raw_text_),
-          reinterpret_cast<char*>(&other->_impl_.ws_is_raw_text_));
+      - PROTOBUF_FIELD_OFFSET(NetifeComposerRequest, _impl_.protocol_type_)>(
+          reinterpret_cast<char*>(&_impl_.protocol_type_),
+          reinterpret_cast<char*>(&other->_impl_.protocol_type_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata NetifeComposerRequest::GetMetadata() const {

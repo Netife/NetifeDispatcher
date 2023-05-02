@@ -292,5 +292,66 @@ NetifeService::Service::~Service() {
 }
 
 
+static const char* NetifePost_method_names[] = {
+  "/NetifeMessage.NetifePost/UploadRequest",
+};
+
+std::unique_ptr< NetifePost::Stub> NetifePost::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
+  (void)options;
+  std::unique_ptr< NetifePost::Stub> stub(new NetifePost::Stub(channel, options));
+  return stub;
+}
+
+NetifePost::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
+  : channel_(channel), rpcmethod_UploadRequest_(NetifePost_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  {}
+
+::grpc::Status NetifePost::Stub::UploadRequest(::grpc::ClientContext* context, const ::NetifeMessage::NetifeProbeRequest& request, ::NetifeMessage::NetifeProbeResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::NetifeMessage::NetifeProbeRequest, ::NetifeMessage::NetifeProbeResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_UploadRequest_, context, request, response);
+}
+
+void NetifePost::Stub::async::UploadRequest(::grpc::ClientContext* context, const ::NetifeMessage::NetifeProbeRequest* request, ::NetifeMessage::NetifeProbeResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::NetifeMessage::NetifeProbeRequest, ::NetifeMessage::NetifeProbeResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_UploadRequest_, context, request, response, std::move(f));
+}
+
+void NetifePost::Stub::async::UploadRequest(::grpc::ClientContext* context, const ::NetifeMessage::NetifeProbeRequest* request, ::NetifeMessage::NetifeProbeResponse* response, ::grpc::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_UploadRequest_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::NetifeMessage::NetifeProbeResponse>* NetifePost::Stub::PrepareAsyncUploadRequestRaw(::grpc::ClientContext* context, const ::NetifeMessage::NetifeProbeRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::NetifeMessage::NetifeProbeResponse, ::NetifeMessage::NetifeProbeRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_UploadRequest_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::NetifeMessage::NetifeProbeResponse>* NetifePost::Stub::AsyncUploadRequestRaw(::grpc::ClientContext* context, const ::NetifeMessage::NetifeProbeRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncUploadRequestRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
+NetifePost::Service::Service() {
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      NetifePost_method_names[0],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< NetifePost::Service, ::NetifeMessage::NetifeProbeRequest, ::NetifeMessage::NetifeProbeResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](NetifePost::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::NetifeMessage::NetifeProbeRequest* req,
+             ::NetifeMessage::NetifeProbeResponse* resp) {
+               return service->UploadRequest(ctx, req, resp);
+             }, this)));
+}
+
+NetifePost::Service::~Service() {
+}
+
+::grpc::Status NetifePost::Service::UploadRequest(::grpc::ServerContext* context, const ::NetifeMessage::NetifeProbeRequest* request, ::NetifeMessage::NetifeProbeResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+
 }  // namespace NetifeMessage
 
