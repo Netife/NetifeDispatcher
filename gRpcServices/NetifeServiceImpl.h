@@ -10,6 +10,7 @@
 #include "../include/models/NetworkRequest.h"
 #include "../include/models/NetworkResponse.h"
 #include "NetifePostClientImpl.h"
+#include "NetifeJsRemoteImpl.h"
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -25,10 +26,12 @@ namespace Netife {
     class NetifeServiceImpl final : public NetifeService::Service{
     private:
         Netife::NetifePostClientImpl client;
+        Netife::NetifeJsRemoteImpl jsRemote;
     public:
-        NetifeServiceImpl(const string& name, const std::string& port)
+        NetifeServiceImpl(const string& name, const std::string& port,const string& jsName, const std::string& jsPort)
             : client(
-                    grpc::CreateChannel(name + ":" + port, grpc::InsecureChannelCredentials())){}
+                    grpc::CreateChannel(name + ":" + port, grpc::InsecureChannelCredentials())),
+              jsRemote(grpc::CreateChannel(jsName + ":" + jsPort, grpc::InsecureChannelCredentials())){}
         Status ProcessProbe (ServerContext* context, const NetifeProbeRequest* request, NetifeProbeResponse* response) override;
         static NetworkRequest TransNetifeProbeRequest(const NetifeProbeRequest* request);
         static NetworkResponse TransNetifeProbeResponse(const NetifeProbeResponse* response);

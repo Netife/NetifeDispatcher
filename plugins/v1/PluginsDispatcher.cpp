@@ -14,6 +14,7 @@
 #include "../../lib/Poco/ClassLoader.h"
 #include "../../lib/Poco/Manifest.h"
 #include "../../include/plugins/v1/NetifePlugins.h"
+#include <regex>
 #include "PluginsDescriptor.h"
 #include "ScriptDescriptor.h"
 #include "NetifeAgentImpl.h"
@@ -266,7 +267,7 @@ namespace Netife {
                 for (int i = 0; i < 2; ++i) { //版本号要求是: A.B.C
                     if (stoi(require[i]) > stoi(really[i])) {
                         CLOG(ERROR, "PluginsDispatcher")
-                                << "Plugins Relative \"" << needPluginName << "\"--->\""
+                                << filepathStart << " Relative \"" << needPluginName << "\"--->\""
                                 << pluginName
                                 << "\" do not fulfill the requirement. The requirement is less than or equal to "
                                 << sp.substr(1, sp.length() - 1)
@@ -423,10 +424,11 @@ namespace Netife {
             //注册监听指令
 
             Array::Ptr hookUrls = node->getArray("hookUrls");
-            for (int i = 0; i < relativeChainsArr->size(); ++i) {
-                Object::Ptr obj = relativeChainsArr->getObject(i);
+            for (int i = 0; i < hookUrls->size(); ++i) {
+                Object::Ptr obj = hookUrls->getObject(i);
                 RegisterScriptFunction(obj->get("regex").toString(),
                                        scriptDescriptor.name + "::" + obj->get("exportFunctionName").toString());
+                CLOG(WARNING, "PluginsDispatcher") << "Load script " << scriptDescriptor.name + "::" + obj->get("exportFunctionName").toString();
             }
         }
         return isWholeOk;
@@ -438,5 +440,15 @@ namespace Netife {
 
     void PluginsDispatcher::RegisterScriptFunction(std::string regex, std::string name) {
         scriptMaps.insert(std::pair<string, string>(name,name));
+    }
+
+    void PluginsDispatcher::ProcessMatchScripts(const string& state, const function<void(std::string name)> &f) {
+        for (const auto &item: scriptMaps){
+            std::regex reg(item.first);
+            if (std::regex_match(state, reg)){
+                auto temp = TextHelper::split(item.second, "::");
+                f( ";"+ temp[0] + ";" + temp[1]);
+            }
+        }
     }
 } // Netife

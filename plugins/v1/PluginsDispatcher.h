@@ -60,6 +60,7 @@ namespace Netife {
         void ProcessAllPlugins(std::function<void (NetifePlugins*)> const& f);
         void RegisterScriptDescriptor(std::string name, ScriptDescriptor);
         void RegisterScriptFunction(std::string regex, std::string name);
+        void ProcessMatchScripts(const std::string&, std::function<void (std::string)> const& f);
     };
 
 } // Netife

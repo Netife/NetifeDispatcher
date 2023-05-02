@@ -8,9 +8,30 @@
 namespace Netife {
     Status NetifeServiceImpl::ProcessProbe(ServerContext *context, const NetifeProbeRequest *request,
                                            NetifeProbeResponse *response) {
+        //逻辑：App/Browser -> Probe -> 插件进入事件[决定是否进入] -> 插件捕获事件[触发] -> 脚本捕获事件[自定义修改]
+        // -> 交付前端修改 -> 插件回调[决定是否进入] -> 插件捕获事件[触发] -> Probe -> Remote Server
+
         // 请求进入
+        //此处为发送给前端
+
+        NetifeProbeRequest scriptRequest = *request;
+        Netife::PluginsDispatcher::Instance()->ProcessMatchScripts(
+                request->raw_text(),[&](std::string name){
+                    scriptRequest.set_uuid(scriptRequest.uuid() + name);
+                    auto response = jsRemote.ProcessScript(scriptRequest);
+                    //修改一次，然后下次再传
+                    scriptRequest.set_dst_ip_addr(response->dst_ip_addr());
+                    scriptRequest.set_dst_ip_port(response->dst_ip_port());
+                    scriptRequest.set_raw_text(response->response_text());
+                }
+        );
+        //最后得到新的request
+
         bool canInto = true;
-        NetworkRequest networkRequest = TransNetifeProbeRequest(request);
+
+        const NetifeProbeRequest* scriptRequestConst = &scriptRequest;
+
+        NetworkRequest networkRequest = TransNetifeProbeRequest(scriptRequestConst);
 
         //此处为事件捕获
 
@@ -26,8 +47,6 @@ namespace Netife {
 
         Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
                 ([networkRequest](NetifePlugins* plugins){ plugins->OnRequestTrigger(networkRequest); });
-
-        //此处为发送给前端
 
         NetifeProbeRequest netifeProbeRequest;
         TransNetWorkRequest(networkRequest, &netifeProbeRequest);

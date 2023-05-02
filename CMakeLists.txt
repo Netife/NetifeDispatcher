@@ -22,10 +22,9 @@ add_executable(NetifeDispatcher main.cpp
         utils/logger.cpp utils/logger.h include/plugins/v1/NetifePlugins.h
         plugins/v1/PluginsDispatcher.cpp plugins/v1/PluginsDispatcher.h
         plugins/v1/PluginsDescriptor.cpp plugins/v1/PluginsDescriptor.h
-        plugins/v1/SignalSlot.cpp plugins/v1/SignalSlot.h
 
         utils/TextHelper.cpp utils/TextHelper.h plugins/v1/CommandDescriptor.cpp
-        plugins/v1/CommandDescriptor.h plugins/v1/HookDescriptor.cpp plugins/v1/HookDescriptor.h include/models/NetworkRequest.h include/models/NetworkResponse.h plugins/v1/NetifeAgentImpl.cpp plugins/v1/NetifeAgentImpl.h plugins/v1/ScriptDescriptor.cpp plugins/v1/ScriptDescriptor.h)
+        plugins/v1/CommandDescriptor.h plugins/v1/HookDescriptor.cpp plugins/v1/HookDescriptor.h include/models/NetworkRequest.h include/models/NetworkResponse.h plugins/v1/NetifeAgentImpl.cpp plugins/v1/NetifeAgentImpl.h plugins/v1/ScriptDescriptor.cpp plugins/v1/ScriptDescriptor.h gRpcServices/NetifeJsRemoteImpl.cpp gRpcServices/NetifeJsRemoteImpl.h)
 
 # gRpc
 target_link_libraries(NetifeDispatcher PRIVATE
