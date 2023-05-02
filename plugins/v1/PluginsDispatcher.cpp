@@ -15,6 +15,7 @@
 #include "../../lib/Poco/Manifest.h"
 #include "../../include/plugins/v1/NetifePlugins.h"
 #include "PluginsDescriptor.h"
+#include "ScriptDescriptor.h"
 #include "NetifeAgentImpl.h"
 #define PLUGINS_DISPATCHER_VERSION "v1"
 
@@ -40,6 +41,8 @@ namespace Netife {
     std::map<std::string, NetifePlugins*> PluginsDispatcher::pluginClassMaps; //插件类实体类 string 为 插件名::插件类名
     PluginLoader PluginsDispatcher::pluginLoader;
     std::map<std::string, SharedLibrary*> PluginsDispatcher::pluginSharedLibraries;
+    std::map<std::string, ScriptDescriptor> PluginsDispatcher::scriptDescriptorLists;
+    std::map<std::string, std::string> PluginsDispatcher::scriptMaps;
     PluginsDispatcher *PluginsDispatcher::Instance() {
         // 双 Check 锁
         if (instance == nullptr) {
@@ -80,6 +83,7 @@ namespace Netife {
             PluginsDescriptor pluginsDescriptor;
             pluginsDescriptor.name = node->get("name").toString();
             pluginsDescriptor.clsid = node->get("clsid").toString();
+            pluginsDescriptor.author = node->get("author").toString();
             pluginsDescriptor.version = node->get("version").toString();
             pluginsDescriptor.exportWay = node->get("exportWay").toString();
             pluginsDescriptor.description = node->get("description").toString();
@@ -170,8 +174,9 @@ namespace Netife {
 
     bool PluginsDispatcher::CheckRelative(const std::string &pluginName,
                                           const std::string &versionDescriptor,
-                                          const std::string &needPluginName) {
-        fs::path filePath = "plugins";
+                                          const std::string &needPluginName,
+                                          const std::string &filepathStart) {
+        fs::path filePath = filepathStart;
         filePath = filePath / "config" / (pluginName + ".json");
         if (!fs::exists(filePath)) {
             CLOG(ERROR, "PluginsDispatcher")
@@ -187,13 +192,13 @@ namespace Netife {
         auto versionLimit = TextHelper::split(versionDescriptor, "|");
         for (auto sp: versionLimit) {
             // 依赖要求大于这个版本号
-            if (sp[0] == '^') {
+            if (sp[0] == '>') {
                 auto require = TextHelper::split(sp.substr(1, sp.length() - 1), ".");
                 auto really = TextHelper::split(version, ".");
                 for (int i = 0; i < 2; ++i) { //版本号要求是: A.B.C
                     if (stoi(require[i]) <= stoi(really[i])) {
                         CLOG(ERROR, "PluginsDispatcher")
-                                << "Plugins Relative \"" << needPluginName << "\"--->\""
+                                << filepathStart <<" Relative \"" << needPluginName << "\"--->\""
                                 << pluginName
                                 << "\" do not fulfill the requirement. The requirement is greater than "
                                 << sp.substr(1, sp.length() - 1)
@@ -210,7 +215,7 @@ namespace Netife {
                 for (int i = 0; i < 2; ++i) { //版本号要求是: A.B.C
                     if (stoi(require[i]) >= stoi(really[i])) {
                         CLOG(ERROR, "PluginsDispatcher")
-                                << "Plugins Relative \"" << needPluginName << "\"--->\""
+                                << filepathStart <<" Relative \"" << needPluginName << "\"--->\""
                                 << pluginName
                                 << "\" do not fulfill the requirement. The requirement is less than "
                                 << sp.substr(1, sp.length() - 1)
@@ -227,9 +232,43 @@ namespace Netife {
                 for (int i = 0; i < 2; ++i) { //版本号要求是: A.B.C
                     if (stoi(require[i]) != stoi(really[i])) {
                         CLOG(ERROR, "PluginsDispatcher")
-                                << "Plugins Relative \"" << needPluginName << "\"--->\""
+                                << filepathStart <<" Relative \"" << needPluginName << "\"--->\""
                                 << pluginName
                                 << "\" do not fulfill the requirement. The requirement equals to "
+                                << sp.substr(1, sp.length() - 1)
+                                << " while the really version is " << version;
+                        return false;
+                    }
+                }
+            }
+
+            // 依赖要求大于等于这个版本号
+            if (sp[0] == '^') {
+                auto require = TextHelper::split(sp.substr(1, sp.length() - 1), ".");
+                auto really = TextHelper::split(version, ".");
+                for (int i = 0; i < 2; ++i) { //版本号要求是: A.B.C
+                    if (stoi(require[i]) < stoi(really[i])) {
+                        CLOG(ERROR, "PluginsDispatcher")
+                                << filepathStart <<" Relative \"" << needPluginName << "\"--->\""
+                                << pluginName
+                                << "\" do not fulfill the requirement. The requirement is greater than or equal to "
+                                << sp.substr(1, sp.length() - 1)
+                                << " while the really version is " << version;
+                        return false;
+                    }
+                }
+            }
+
+            //依赖要求小于这个版本号
+            if (sp[0] == '~') {
+                auto require = TextHelper::split(sp.substr(1, sp.length() - 1), ".");
+                auto really = TextHelper::split(version, ".");
+                for (int i = 0; i < 2; ++i) { //版本号要求是: A.B.C
+                    if (stoi(require[i]) > stoi(really[i])) {
+                        CLOG(ERROR, "PluginsDispatcher")
+                                << "Plugins Relative \"" << needPluginName << "\"--->\""
+                                << pluginName
+                                << "\" do not fulfill the requirement. The requirement is less than or equal to "
                                 << sp.substr(1, sp.length() - 1)
                                 << " while the really version is " << version;
                         return false;
@@ -294,13 +333,13 @@ namespace Netife {
         return pluginClassMaps[pluginClassWithClassName];
     }
 
-    optional<string> PluginsDispatcher::UseCommand(string command) {
-        auto iter = commandLists.find(command);
+    optional<string> PluginsDispatcher::UseCommand(string commandPrefix, string rawCommand) {
+        auto iter = commandLists.find(commandPrefix);
         if(iter == commandLists.end()){
             return nullopt;
         }
         string plugin = iter->second.pluginName + "::" + iter->second.className;
-        string res = pluginClassMaps[plugin]->DispatcherCommand(command);
+        string res = pluginClassMaps[plugin]->DispatcherCommand(rawCommand);
         return { res };
     }
 
@@ -331,5 +370,73 @@ namespace Netife {
         for (auto plugin:pluginClassMaps) {
             f(plugin.second);
         }
+    }
+
+    bool PluginsDispatcher::AutoLoadScripts() {
+        fs::path basicPath = "scripts";
+        bool isWholeOk = true;
+        for (auto &plugin: fs::directory_iterator(basicPath / "bin")) // 遍历目录
+        {
+
+            auto filePath = basicPath / "config" / (plugin.path().stem().string() + ".json");
+            if (!fs::exists(filePath)) {
+                CLOG(ERROR, "PluginsDispatcher") << "WARN FOR NO CONFIG DESCRIPTION IN CONFIG DIR. "
+                                                    "PLEASE CHECK \"" << plugin.path().filename()
+                                                 << "\" CONFIG OR REINSTALL IT.";
+                continue;
+            }
+
+
+            ifstream jsonFile(filePath);
+            Parser parser;
+            var::Var result = parser.parse(jsonFile); // 解析 JSON 文件
+            Object::Ptr node = result.extract<Object::Ptr>(); // 获取 JSON 对象
+            if (PLUGINS_DISPATCHER_VERSION != node->get("coreRelative").toString()) {
+                CLOG(WARNING, "PluginsDispatcher") << "THE PLUGINS DISPATCHER "
+                                                      "VERSION IS NOT FULFILLED WITH THIS CORE. IT MAY CAUSE SOME PROBLEMS";
+            }
+
+            ScriptDescriptor scriptDescriptor;
+            scriptDescriptor.name = node->get("name").toString();
+            scriptDescriptor.clsid = node->get("clsid").toString();
+            scriptDescriptor.author = node->get("author").toString();
+            scriptDescriptor.version = node->get("version").toString();
+            scriptDescriptor.description = node->get("description").toString();
+            RegisterScriptDescriptor(scriptDescriptor.name, scriptDescriptor);
+            //检查依赖关系
+
+            bool isOk = true;
+            Array::Ptr relativeChainsArr = node->getArray("relativeChains");
+            for (int i = 0; i < relativeChainsArr->size(); ++i) {
+                Object::Ptr obj = relativeChainsArr->getObject(i);
+                if (!CheckRelative(obj->get("name").toString(), obj->get("version").toString(),
+                                   scriptDescriptor.name, "scripts")) {
+                    isOk = false;
+                    isWholeOk = false;
+                }
+            }
+
+            if (!isOk) {
+                continue;
+            }
+
+            //注册监听指令
+
+            Array::Ptr hookUrls = node->getArray("hookUrls");
+            for (int i = 0; i < relativeChainsArr->size(); ++i) {
+                Object::Ptr obj = relativeChainsArr->getObject(i);
+                RegisterScriptFunction(obj->get("regex").toString(),
+                                       scriptDescriptor.name + "::" + obj->get("exportFunctionName").toString());
+            }
+        }
+        return isWholeOk;
+    }
+
+    void PluginsDispatcher::RegisterScriptDescriptor(std::string name, ScriptDescriptor scriptDescriptor) {
+        scriptDescriptorLists.insert(std::pair<string, ScriptDescriptor>(name,scriptDescriptor));
+    }
+
+    void PluginsDispatcher::RegisterScriptFunction(std::string regex, std::string name) {
+        scriptMaps.insert(std::pair<string, string>(name,name));
     }
 } // Netife

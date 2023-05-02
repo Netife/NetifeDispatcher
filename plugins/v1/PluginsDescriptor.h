@@ -12,6 +12,7 @@ namespace Netife {
     public:
         string name;
         string clsid;
+        string author;
         string version;
         string exportWay;
         string description;

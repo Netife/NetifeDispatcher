@@ -186,4 +186,31 @@ namespace Netife {
         response->set_dst_ip_addr(networkResponse.DstIpPort);
         response->set_response_text(networkResponse.ResponseText);
     }
+
+    Status NetifeServiceImpl::Command(ServerContext *context, const NetifePluginCommandRequest *request,
+                                      NetifePluginCommandResponse *response) {
+        string msgTag;
+        if (request->has_uuid()){
+            msgTag = "UUID:" + request->uuid();
+        }
+        if(request->has_uuid_sub()){
+            msgTag += ";SUB:" + to_string(request->uuid_sub());
+        }
+
+        string params = "";
+        for (const auto &item: request->params()){
+            params += " " + item;
+        }
+
+        auto res = Netife::PluginsDispatcher::Instance()->
+            UseCommand(request->command_prefix(),
+                       request->command_prefix() + " " + msgTag + params);
+        if (!res.has_value()){
+            return Status::CANCELLED;
+        }else{
+            response->set_status(true);
+            response->set_result(res.value());
+        }
+        return Service::Command(context, request, response);
+    }
 } // Netife

@@ -83,6 +83,10 @@ void InitDirectoryStructure() {
     createDirIfNotExists("plugins\\config");
     createDirIfNotExists("plugins\\data");
     createDirIfNotExists("config");
+    createDirIfNotExists("scripts");
+    createDirIfNotExists("scripts\\bin");
+    createDirIfNotExists("scripts\\data");
+    createDirIfNotExists("scripts\\config");
 }
 
 void createDirIfNotExists(string dirName){

@@ -4,17 +4,17 @@ package NetifeMessage;
 
 // Dispatcher 服务
 service NetifeService {
-    rpc ProcessProbe (NetifeProbeRequest) returns (NetifeProbeResponse);
-    rpc Register (NetifeRegisterRequest) returns (NetifeRegisterResponse);
-    rpc Composer (NetifeComposerRequest) returns (NetifeComposerResponse);
-    rpc Command (NetifePluginCommandRequest) returns (NetifePluginCommandResponse);
-    rpc ScriptRegister (NetifeScriptRegisterRequest) returns (NetifeScriptRegisterResponse);
-    rpc ScriptDebug (NetifeScriptDebuggerRequest) returns (NetifeScriptDebuggerResponse);
+    rpc ProcessProbe (NetifeProbeRequest) returns (NetifeProbeResponse); // [已发布]
+    rpc Register (NetifeRegisterRequest) returns (NetifeRegisterResponse); // [弃用] 只允许同一个对象链接 Dispatcher，不然调试不知道是不是真实数据
+    rpc Composer (NetifeComposerRequest) returns (NetifeComposerResponse); // [等待 Probe 中]
+    rpc Command (NetifePluginCommandRequest) returns (NetifePluginCommandResponse); // [已发布]
+    rpc ScriptRegister (NetifeScriptRegisterRequest) returns (NetifeScriptRegisterResponse); // [弃用] 通过框架直接加载
+    rpc ScriptDebug (NetifeScriptDebuggerRequest) returns (NetifeScriptDebuggerResponse); // [开发中]
 }
 
 // 消息上报
 service NetifePost{
-    rpc UploadRequest (NetifeProbeRequest) returns (NetifeProbeResponse);
+    rpc UploadRequest (NetifeProbeRequest) returns (NetifeProbeResponse); // [已发布]
 }
 
 // 定义 Netife Probe 的请求信息的数据结构

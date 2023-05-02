@@ -17,6 +17,8 @@ using grpc::Status;
 using NetifeMessage::NetifeProbeRequest;
 using NetifeMessage::NetifeProbeResponse;
 using NetifeMessage::NetifeService;
+using NetifeMessage::NetifePluginCommandRequest;
+using NetifeMessage::NetifePluginCommandResponse;
 
 namespace Netife {
 
@@ -32,6 +34,7 @@ namespace Netife {
         static NetworkResponse TransNetifeProbeResponse(const NetifeProbeResponse* response);
         static void TransNetWorkResponse(NetworkResponse networkResponse, NetifeProbeResponse* response);
         static void TransNetWorkRequest(NetworkRequest networkRequest, NetifeProbeRequest* request);
+        Status Command (ServerContext* context, const NetifePluginCommandRequest* request, NetifePluginCommandResponse* response) override;
     };
 
 } // Netife
