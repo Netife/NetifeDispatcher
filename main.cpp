@@ -13,9 +13,9 @@ INITIALIZE_EASYLOGGINGPP;
 #define DEBUG_MODE true
 #define DEBUG_HOST_IP "0.0.0.0"
 #define DEBUG_HOST_PORT "7890"
-#define DEBUG_FRONTEND_IP "0.0.0.0"
+#define DEBUG_FRONTEND_IP "localhost"
 #define DEBUG_FRONTEND_PORT "7891"
-#define DEBUG_JS_REMOTE_IP "0.0.0.0"
+#define DEBUG_JS_REMOTE_IP "localhost"
 #define DEBUG_JS_REMOTE_PORT "7892"
 
 using namespace std;

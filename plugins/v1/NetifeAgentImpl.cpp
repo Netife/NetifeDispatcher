@@ -4,6 +4,7 @@
 
 #include "NetifeAgentImpl.h"
 #include "PluginsDispatcher.h"
+#define ELPP_THREAD_SAFE
 #include "../../lib/log/easylogging++.h"
 #include <optional>
 using namespace std;

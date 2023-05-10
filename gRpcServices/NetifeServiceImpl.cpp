@@ -13,14 +13,11 @@ namespace Netife {
 
         // 请求进入
         //此处为发送给前端
-
         bool isNormal = true;
         NetifeProbeRequest scriptRequest = *request;
         Netife::PluginsDispatcher::Instance()->ProcessMatchScripts(
                 request->raw_text(),[&](std::string name){
                     //插件事件 [进入脚本时]
-
-
 
                     //[事件] 进入脚本前
                     auto pluginsIntercept = TransNetifeProbeRequest(const_cast<const NetifeProbeRequest*>(&scriptRequest));
@@ -91,6 +88,7 @@ namespace Netife {
             CLOG(WARNING,"NetifeService") << "The response was cancelled by frontend: " << networkRequest.UUID;
             return Status::CANCELLED;
         }
+
         NetworkResponse networkResponse = TransNetifeProbeResponse(&(netifeResponse.value()));
 
         //此处为回调事件捕获
@@ -109,6 +107,8 @@ namespace Netife {
 
         Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
                 ([networkResponse](NetifePlugins* plugins){ plugins->OnResponseTrigger(networkResponse); });
+
+        TransNetWorkResponse(networkResponse, response);
 
         return Status::OK;
     }
