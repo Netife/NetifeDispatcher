@@ -444,15 +444,16 @@ namespace Netife {
     }
 
     void PluginsDispatcher::RegisterScriptFunction(std::string regex, std::string name) {
-        scriptMaps.insert(std::pair<string, string>(name,name));
+        scriptMaps.insert(std::pair<string, string>(name,regex));
     }
 
     void PluginsDispatcher::ProcessMatchScripts(const string& state, const function<void(std::string name)> &f) {
         for (const auto &item: scriptMaps){
-            std::regex reg(item.first);
-            if (std::regex_match(state, reg)){
-                auto temp = TextHelper::split(item.second, "::");
-                f( ";"+ temp[0] + ";" + temp[1]);
+            std::regex reg(item.second);
+            std::string beMatched = TextHelper::getBetween(state,"Host:","\r\n");
+            if (std::regex_match(beMatched, reg)){
+                auto temp = TextHelper::split(item.first, "::");
+                f( ";"+ temp[0] + ";" + temp[1].substr(1, temp[1].length()));
             }
         }
     }

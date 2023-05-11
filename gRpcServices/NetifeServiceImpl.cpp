@@ -3,6 +3,7 @@
 //
 
 #include "NetifeServiceImpl.h"
+#define ELPP_THREAD_SAFE
 #include "../plugins/v1/PluginsDispatcher.h"
 #include "../lib/log/easylogging++.h"
 namespace Netife {
@@ -45,7 +46,7 @@ namespace Netife {
 
                     Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
                             ([&](NetifePlugins* plugins)
-                             { isNormal &= plugins->OnUseScript(
+                             { isNormal &= plugins->OnExitScript(
                                      scriptRequest.uuid() + name, &pluginsIntercept); });
                     TransNetWorkRequest(pluginsIntercept, &scriptRequest);
 
@@ -266,6 +267,6 @@ namespace Netife {
             response->set_status(true);
             response->set_result(res.value());
         }
-        return Service::Command(context, request, response);
+        return Status::OK;
     }
 } // Netife

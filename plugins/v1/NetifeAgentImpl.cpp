@@ -13,6 +13,9 @@ std::optional<NetifePlugins *> NetifeAgentImpl::GetRelativePluginRef(const strin
     if (instance == nullptr){
         return nullopt;
     }
+    if (instance->ExposeRefModule()){
+        return nullopt; // 如果插件不允许暴露自己的引用，那么 Dispatcher 按照约定不给予实例
+    }
     return { instance };
 }
 
@@ -38,4 +41,24 @@ void NetifeAgentImpl::LogInfo(const string &name, const string &content) {
 
 NetifeAgentImpl::~NetifeAgentImpl() {
 
+}
+
+void NetifeAgentImpl::LogError(const string &name, const string &content) {
+    CLOG(ERROR, "Plugin") << "[" << name << "]" << content;
+}
+
+void NetifeAgentImpl::LogWarn(const string &name, const string &content) {
+    CLOG(WARNING, "Plugin") << "[" << name << "]" << content;
+}
+
+void NetifeAgentImpl::LogDebug(const string &name, const string &content) {
+    CLOG(DEBUG, "Plugin") << "[" << name << "]" << content;
+}
+
+bool NetifeAgentImpl::IsExisted(const string &dllName, const string &className) {
+    auto plugin = GetRelativePluginRef(dllName + "::" + className);
+    if (!plugin.has_value()){
+        return false;
+    }
+    return true;
 }

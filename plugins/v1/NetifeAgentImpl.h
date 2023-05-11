@@ -13,6 +13,10 @@ class NetifeAgentImpl : public NetifePluginAgent{
     std::optional<const NetifePlugins*> GetRelativePlugin(const std::string& pluginsName) override;// [安全函数，本函数允许插件得到插件实例对象的副本] 得到插件的 Copy
     std::optional<std::string> CarryRelativePluginCommand(const std::string& pluginsName, const std::string& command) override;// 执行一个命令，得到返回值
     void LogInfo(const std::string& name, const std::string& content) override;
+    void LogWarn(const std::string& name, const std::string& content) override;
+    void LogError(const std::string& name, const std::string& content) override;
+    void LogDebug(const std::string& name, const std::string& content) override;
+    bool IsExisted(const std::string& dllName, const std::string &className) override;
 };
 
 

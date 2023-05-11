@@ -152,7 +152,7 @@ message NetifePluginCommandResponse {
     string result = 2; // 插件返回的信息
 }
 
-message NetifeScriptRegisterRequest {
+message NetifeScriptRegisterRequest { //[弃用]
 
     string script_name = 1; // 脚本名称
 
@@ -175,20 +175,20 @@ message NetifeScriptRegisterRequest {
     string version = 10; // [脚本内容] Script 的版本
 }
 
-message NetifeScriptRegisterResponse {
+message NetifeScriptRegisterResponse { //[弃用]
 
     bool status = 1; // 脚本返回的状态
 
     string result = 2; // 脚本返回的信息
 }
 
-message NetifeScriptDebuggerRequest {
+message NetifeScriptDebuggerRequest { //[弃用]
 
     string script_name = 1; // 插件的名称
 
 }
 
-message NetifeScriptDebuggerResponse {
+message NetifeScriptDebuggerResponse { //[弃用]
 
     string ws_addr = 1; // 调试使用的 WS 的地址
 

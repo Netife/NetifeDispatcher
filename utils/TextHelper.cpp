@@ -23,4 +23,17 @@ namespace Netife{
 
         return res;
     }
+
+    std::string TextHelper::getBetween(const string &str, const string &left, const string &right) {
+        string result = "";
+        size_t left_pos = str.find(left);
+        if (left_pos != string::npos) { // left字符串存在于s中
+            left_pos += left.length(); // left_pos调整为left后面的位置
+            size_t right_pos = str.find(right, left_pos); // 从left_pos右侧开始查找right字符串
+            if (right_pos != string::npos) { // right字符串存在于s中
+                result = str.substr(left_pos, right_pos - left_pos); // 取出left_pos与right_pos之间的子串
+            }
+        }
+        return result;
+    }
 }

@@ -72,6 +72,12 @@ public:
     virtual bool OnExitScript(const string& script, NetworkRequest* request){
         return true;
     }
+
+    //插件是否运行其他插件以可修改的方式获取自己的实例 [危险函数，若允许，那么其他插件可能会修改本插件的实例内容，即可能会在插件的调用依赖链中注入恶意信息]
+    virtual bool ExposeRefModule(){
+        return false;
+    }
+
 };
 
 #endif //NETIFEDISPATCHER_NETIFEPLUGINS_H
