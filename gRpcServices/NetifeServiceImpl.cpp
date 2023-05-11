@@ -245,22 +245,15 @@ namespace Netife {
 
     Status NetifeServiceImpl::Command(ServerContext *context, const NetifePluginCommandRequest *request,
                                       NetifePluginCommandResponse *response) {
-        string msgTag;
-        if (request->has_uuid()){
-            msgTag = "UUID:" + request->uuid();
-        }
-        if(request->has_uuid_sub()){
-            msgTag += ";SUB:" + to_string(request->uuid_sub());
-        }
 
-        string params = "";
+        vector<string> params;
+        params.push_back(request->command_prefix());
         for (const auto &item: request->params()){
-            params += " " + item;
+            params.push_back(item);
         }
 
         auto res = Netife::PluginsDispatcher::Instance()->
-            UseCommand(request->command_prefix(),
-                       request->command_prefix() + " " + msgTag + params);
+            UseCommandByVector(request->command_prefix(), params);
         if (!res.has_value()){
             return Status::CANCELLED;
         }else{

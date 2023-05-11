@@ -339,13 +339,31 @@ namespace Netife {
         return pluginClassMaps[pluginClassWithClassName];
     }
 
-    optional<string> PluginsDispatcher::UseCommand(string commandPrefix, string rawCommand) {
+    optional<string> PluginsDispatcher::UseRawCommand(string commandPrefix, string rawCommand) {
         auto iter = commandLists.find(commandPrefix);
         if(iter == commandLists.end()){
             return nullopt;
         }
         string plugin = iter->second.pluginName + "::" + iter->second.className;
-        string res = pluginClassMaps[plugin]->DispatcherCommand(rawCommand);
+
+        vector<string> beParams = TextHelper::split(iter->second.originCommand, " ");
+        vector<string> realParams = TextHelper::splitByBlankWithSkipBlank(rawCommand);
+        map<string, optional<string>> params;
+        for (int i = 1; i < beParams.size(); ++i) { //命令头
+            params.insert(std::pair<string, optional<string>>(beParams[i].substr(1, beParams[i].length() - 2),
+                    realParams[i]));
+        }
+
+        for (int i = realParams.size() - 1; i < beParams.size() - 1; ++i) {
+            //例如 实际上传入了 2 个参数，但是要求有3个参数。那么就是 int i = 2 < 3 再执行一次
+            if (beParams[i][0] != '<'){
+                return nullopt; //不是 < 那就不是可选的，那么就说明出错了。
+            }
+            std::string name = beParams[i].substr(1, beParams[i].length() - 2);
+            params.insert(std::pair<string, optional<string>>(name, nullopt)); //插入空值
+        }
+
+        string res = pluginClassMaps[plugin]->DispatcherCommand(commandPrefix, params);
         return { res };
     }
 
@@ -460,5 +478,42 @@ namespace Netife {
 
     PluginsDispatcher::~PluginsDispatcher() {
         UnRegisterAllPlugins();
+    }
+
+    optional<string> PluginsDispatcher::UseCommandByVector(string commandPrefix, vector<string> commandParams) {
+        auto iter = commandLists.find(commandPrefix);
+        if(iter == commandLists.end()){
+            return nullopt;
+        }
+        string plugin = iter->second.pluginName + "::" + iter->second.className;
+        vector<string> beParams = TextHelper::split(iter->second.originCommand, " ");
+        map<string, optional<string>> params;
+        for (int i = 1; i < beParams.size(); ++i) { //命令头
+            params.insert(std::pair<string, optional<string>>(beParams[i].substr(1, beParams[i].length() - 2),
+                                                              commandParams[i]));
+        }
+
+        for (int i = commandParams.size() - 1; i < beParams.size() - 1; ++i) {
+            //例如 实际上传入了 2 个参数，但是要求有3个参数。那么就是 int i = 2 < 3 再执行一次
+            if (beParams[i][0] != '<'){
+                return nullopt; //不是 < 那就不是可选的，那么就说明出错了。
+            }
+            std::string name = beParams[i].substr(1, beParams[i].length() - 2);
+            params.insert(std::pair<string, optional<string>>(name, nullopt)); //插入空值
+        }
+
+        string res = pluginClassMaps[plugin]->DispatcherCommand(commandPrefix, params);
+        return { res };
+    }
+
+    optional<string>
+    PluginsDispatcher::UseCommandByMap(string commandPrefix, map<string, optional<string>> commandParams) {
+        auto iter = commandLists.find(commandPrefix);
+        if(iter == commandLists.end()){
+            return nullopt;
+        }
+        string plugin = iter->second.pluginName + "::" + iter->second.className;
+        string res = pluginClassMaps[plugin]->DispatcherCommand(commandPrefix, commandParams);
+        return { res };
     }
 } // Netife

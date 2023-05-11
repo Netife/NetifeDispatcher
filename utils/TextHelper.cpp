@@ -2,6 +2,7 @@
 // Created by Administrator on 2023/5/1.
 //
 
+#include <sstream>
 #include "TextHelper.h"
 using namespace std;
 namespace Netife{
@@ -35,5 +36,32 @@ namespace Netife{
             }
         }
         return result;
+    }
+
+    std::vector<std::string> TextHelper::splitByBlankWithSkipBlank(const string &str) {
+        vector<string> res;
+        stringstream ss(str);
+        string temp;
+        bool flag = false; // 判断是否在双引号内
+        while (ss >> temp) {
+            if (temp[0] == '\"') {
+                flag = true;
+                temp = temp.substr(1);
+                res.push_back(temp);
+                continue;
+            }
+            if (temp[temp.size()-1] == '\"') {
+                flag = false;
+                temp = temp.substr(0, temp.size()-1);
+                res.back() += ' ' + temp; // 注意需要加上空格
+                continue;
+            }
+            if (flag) {
+                res.back() += ' ' + temp; // 注意需要加上空格
+            } else {
+                res.push_back(temp);
+            }
+        }
+        return res;
     }
 }

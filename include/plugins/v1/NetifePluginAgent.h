@@ -21,7 +21,7 @@ public:
     virtual ~NetifePluginAgent()= default;
     virtual std::optional<NetifePlugins*> GetRelativePluginRef(const std::string& pluginsName) = 0;//[危险函数，本函数允许插件直接修改插件实例对象，但需要插件授权] 得到插件的 Ref
     virtual std::optional<const NetifePlugins*> GetRelativePlugin(const std::string& pluginsName) = 0;// [安全函数，本函数允许插件得到插件实例对象的副本] 得到插件的 Copy
-    virtual std::optional<std::string> CarryRelativePluginCommand(const std::string& pluginsName, const std::string& command) = 0;// 执行一个命令，得到返回值
+    virtual std::optional<std::string> CarryPluginCommand(const std::string& commandPrefix, const std::string& rawCommand)  = 0;// 执行一个命令，得到返回值
     virtual void LogInfo(const std::string& content) = 0; //Log Information
     virtual void LogWarn(const std::string& content) = 0; //Log Warning
     virtual void LogError(const std::string& content) = 0; //Log Error
@@ -29,6 +29,10 @@ public:
     virtual bool IsExisted(const std::string& dllName, const std::string &className) = 0; // 判断一个函数是否存在
     virtual std::string GetMainModuleDataPath() = 0; //得到主插件存储空间
     virtual std::string GetPluginDataPath() = 0; //得到插件实体类存储空间
+    virtual std::map<std::string, std::string> WrapperCommandResultWithMap(const std::string& res) = 0;
+    virtual std::optional<std::string> CarryPluginCommandWithVector(const std::string& commandPrefix, std::vector
+    <string> params)  = 0;// 执行一个命令，得到返回值
+    virtual std::optional<std::string> CarryPluginCommandWithMap(const std::string& commandPrefix, std::map<std::string, std::optional<std::string>> params)  = 0;// 执行一个命令，得到返回值
 };
 
 

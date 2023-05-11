@@ -8,7 +8,17 @@
 #include "../../lib/log/easylogging++.h"
 #include <optional>
 #include <filesystem>
+#include "../../lib/Poco/JSON/Array.h"
+#include "../../lib/Poco/JSON/Parser.h"
+#include "../../lib/Poco/JSON/ParseHandler.h"
+#include "../../lib/Poco/JSON/Stringifier.h"
 using namespace std;
+using Poco::JSON::Object;
+using Poco::JSON::Array;
+using Poco::JSON::ParseHandler;
+using Poco::JSON::Parser;
+using Poco::JSON::Stringifier;
+namespace var = Poco::Dynamic;
 std::optional<NetifePlugins *> NetifeAgentImpl::GetRelativePluginRef(const string &pluginsName) {
     auto instance = Netife::PluginsDispatcher::Instance()->GetPluginInstance(pluginsName);
     if (instance == nullptr){
@@ -27,14 +37,6 @@ std::optional<const NetifePlugins*> NetifeAgentImpl::GetRelativePlugin(const str
         return nullopt;
     }
     return { netifePlugins };
-}
-
-std::optional<std::string> NetifeAgentImpl::CarryRelativePluginCommand(const string &pluginsName, const string &command) {
-    auto plugin = GetRelativePluginRef(pluginsName);
-    if (!plugin.has_value()){
-        return nullopt;
-    }
-    return { plugin.value()->DispatcherCommand(command) };
 }
 
 void NetifeAgentImpl::LogInfo(const string &content) {
@@ -111,4 +113,30 @@ std::string NetifeAgentImpl::GetPluginDataPath() {
         create_directory(dataPath);
     }
     return dataPath.string();
+}
+
+std::optional<std::string>
+NetifeAgentImpl::CarryPluginCommand(const string &commandPrefix, const string &rawCommand) {
+    return { Netife::PluginsDispatcher::Instance()->UseRawCommand(commandPrefix, rawCommand) };
+}
+
+std::optional<std::string>
+NetifeAgentImpl::CarryPluginCommandWithVector(const string &commandPrefix, std::vector<string> params) {
+    return { Netife::PluginsDispatcher::Instance()->UseCommandByVector(commandPrefix, params) };
+}
+
+std::optional<std::string> NetifeAgentImpl::CarryPluginCommandWithMap(const string &commandPrefix,
+                                                                      std::map<std::string, std::optional<std::string>> params) {
+    return { Netife::PluginsDispatcher::Instance()->UseCommandByMap(commandPrefix, params) };
+}
+
+std::map<std::string, std::string> NetifeAgentImpl::WrapperCommandResultWithMap(const string &res) {
+    std::map<std::string, std::string> resBack;
+    Parser parser;
+    var::Var result = parser.parse(res); // 解析 JSON 文件
+    Object::Ptr node = result.extract<Object::Ptr>(); // 获取 JSON 对象
+    for (auto item:*node) {
+        resBack.insert(std::pair<string, string>(item.first, item.second.toString()));
+    }
+    return resBack;
 }

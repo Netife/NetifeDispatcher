@@ -5,6 +5,7 @@
 #ifndef NETIFEDISPATCHER_NETIFEPLUGINS_H
 #define NETIFEDISPATCHER_NETIFEPLUGINS_H
 #include <iostream>
+#include <map>
 #include "NetifePluginAgent.h"
 #include "../../models/NetworkRequest.h"
 #include "../../models/NetworkResponse.h"
@@ -27,7 +28,7 @@ public:
 
     virtual std::string GetVersion() const = 0;
 
-    virtual std::string DispatcherCommand(std::string commandOriginal) = 0;
+    virtual std::string DispatcherCommand(std::string commandHead, std::map<std::string, std::optional<std::string>> params) = 0;
 
     //当插件启用的时候 [顺序不明确]
     virtual bool OnEnable() = 0;
