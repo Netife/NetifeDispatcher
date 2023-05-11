@@ -27,6 +27,8 @@ public:
     virtual void LogError(const std::string& content) = 0; //Log Error
     virtual void LogDebug(const std::string& content) = 0; //Log Debug
     virtual bool IsExisted(const std::string& dllName, const std::string &className) = 0; // 判断一个函数是否存在
+    virtual std::string GetMainModuleDataPath() = 0; //得到主插件存储空间
+    virtual std::string GetPluginDataPath() = 0; //得到插件实体类存储空间
 };
 
 

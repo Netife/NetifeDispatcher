@@ -21,6 +21,8 @@ public:
     void LogError(const std::string& content) override;
     void LogDebug(const std::string& content) override;
     bool IsExisted(const std::string& dllName, const std::string &className) override;
+    std::string GetMainModuleDataPath() override;
+    std::string GetPluginDataPath() override;
 };
 
 

@@ -78,6 +78,9 @@ public:
         return false;
     }
 
+    virtual bool ExposeRefJudgingByName(const string& name){
+        return false;
+    }
 };
 
 #endif //NETIFEDISPATCHER_NETIFEPLUGINS_H

@@ -7,13 +7,15 @@
 #define ELPP_THREAD_SAFE
 #include "../../lib/log/easylogging++.h"
 #include <optional>
+#include <filesystem>
 using namespace std;
 std::optional<NetifePlugins *> NetifeAgentImpl::GetRelativePluginRef(const string &pluginsName) {
     auto instance = Netife::PluginsDispatcher::Instance()->GetPluginInstance(pluginsName);
     if (instance == nullptr){
         return nullopt;
     }
-    if (instance->ExposeRefModule()){
+    if (instance->ExposeRefModule() || instance->ExposeRefJudgingByName(NetifeAgentImpl::dllName.value()
+    + "::" + NetifeAgentImpl::className.value())){
         return nullopt; // 如果插件不允许暴露自己的引用，那么 Dispatcher 按照约定不给予实例
     }
     return { instance };
@@ -77,4 +79,36 @@ bool NetifeAgentImpl::IsExisted(const string &dllName, const string &className) 
         return false;
     }
     return true;
+}
+
+std::string NetifeAgentImpl::GetMainModuleDataPath() {
+    std::filesystem::path dataPath = "";
+    if (NetifeAgentImpl::isPluginInstance){
+        dataPath = "plugins";
+    }else{
+        dataPath = "scripts";
+    }
+    dataPath = dataPath / "data" / NetifeAgentImpl::dllName.value();
+    if (!exists(dataPath)){
+        create_directory(dataPath);
+    }
+    return dataPath.string();
+}
+
+std::string NetifeAgentImpl::GetPluginDataPath() {
+    std::filesystem::path dataPath = "";
+    if (NetifeAgentImpl::isPluginInstance){
+        dataPath = "plugins";
+    }else{
+        dataPath = "scripts";
+    }
+    dataPath = dataPath / "data" / NetifeAgentImpl::dllName.value();
+    if (!exists(dataPath)){
+        create_directory(dataPath);
+    }
+    dataPath = dataPath / NetifeAgentImpl::className.value();
+    if (!exists(dataPath)){
+        create_directory(dataPath);
+    }
+    return dataPath.string();
 }
