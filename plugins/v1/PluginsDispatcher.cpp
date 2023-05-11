@@ -149,7 +149,7 @@ namespace Netife {
                     NetifePlugins *netifePlugin = pluginLoader.create(itMan->name());
                     RegisterPluginClassMaps(pluginsDescriptor.name + "::" + itMan->name(),
                                             netifePlugin);
-                    NetifePluginAgent* agent = new NetifeAgentImpl();
+                    NetifePluginAgent* agent = new NetifeAgentImpl(true,pluginsDescriptor.name, itMan->name());
                     netifePlugin->SetNetifePluginAgent(agent);
                     CLOG(INFO, "PluginsDispatcher") << "[" << pluginsDescriptor.name << "]["
                                                     << itMan->name() << "] Name:\"" << netifePlugin->GetName() << "\""
@@ -354,7 +354,7 @@ namespace Netife {
         if(iter == hookLists.end()){
             return;
         }
-        NetifePluginAgent* agent = new NetifeAgentImpl();
+        NetifePluginAgent* agent = new NetifeAgentImpl(false, iter->second.pluginName, iter->second.pluginSymbol);
         for (int i = 0, len = hookLists.count(hookNode);i < len; ++i,++iter) {
             string plugin = iter->second.pluginName;
             BaseHookNode func = (BaseHookNode)pluginSharedLibraries[plugin]->getSymbol(iter->second.pluginSymbol);

@@ -35,6 +35,7 @@ int main(int argc, char *argv[]) {
     Netife::logger::RegisterCommonLogger("Loader");
     Netife::logger::RegisterCommonLogger("PluginsDispatcher");
     Netife::logger::RegisterCommonLogger("Plugin");
+    Netife::logger::RegisterCommonLogger("Script");
     Netife::logger::RegisterCommonLogger("NetifeService");
     //初始化目录结构
 

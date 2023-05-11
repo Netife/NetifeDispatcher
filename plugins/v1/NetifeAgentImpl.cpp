@@ -35,24 +35,40 @@ std::optional<std::string> NetifeAgentImpl::CarryRelativePluginCommand(const str
     return { plugin.value()->DispatcherCommand(command) };
 }
 
-void NetifeAgentImpl::LogInfo(const string &name, const string &content) {
-    CLOG(INFO, "Plugin") << "[" << name << "] " << content;
+void NetifeAgentImpl::LogInfo(const string &content) {
+    if (NetifeAgentImpl::isPluginInstance){
+        CLOG(INFO, "Plugin") << "[" << NetifeAgentImpl::dllName.value() << "::" << NetifeAgentImpl::className.value() << "] " << content;
+    }else{
+        CLOG(INFO, "Script") << "[" << NetifeAgentImpl::dllName.value() << "::" << NetifeAgentImpl::className.value() << "] " << content;
+    }
 }
 
 NetifeAgentImpl::~NetifeAgentImpl() {
 
 }
 
-void NetifeAgentImpl::LogError(const string &name, const string &content) {
-    CLOG(ERROR, "Plugin") << "[" << name << "]" << content;
+void NetifeAgentImpl::LogError(const string &content) {
+    if (NetifeAgentImpl::isPluginInstance){
+        CLOG(ERROR, "Plugin") << "[" << NetifeAgentImpl::dllName.value() << "::" << NetifeAgentImpl::className.value() << "] " << content;
+    }else{
+        CLOG(ERROR, "Script") << "[" << NetifeAgentImpl::dllName.value() << "::" << NetifeAgentImpl::className.value() << "] " << content;
+    }
 }
 
-void NetifeAgentImpl::LogWarn(const string &name, const string &content) {
-    CLOG(WARNING, "Plugin") << "[" << name << "]" << content;
+void NetifeAgentImpl::LogWarn(const string &content) {
+    if (NetifeAgentImpl::isPluginInstance){
+        CLOG(WARNING, "Plugin") << "[" << NetifeAgentImpl::dllName.value() << "::" << NetifeAgentImpl::className.value() << "] " << content;
+    }else{
+        CLOG(WARNING, "Script") << "[" << NetifeAgentImpl::dllName.value() << "::" << NetifeAgentImpl::className.value() << "] " << content;
+    }
 }
 
-void NetifeAgentImpl::LogDebug(const string &name, const string &content) {
-    CLOG(DEBUG, "Plugin") << "[" << name << "]" << content;
+void NetifeAgentImpl::LogDebug(const string &content) {
+    if (NetifeAgentImpl::isPluginInstance){
+        CLOG(DEBUG, "Plugin") << "[" << NetifeAgentImpl::dllName.value() << "::" << NetifeAgentImpl::className.value() << "] " << content;
+    }else{
+        CLOG(DEBUG, "Script") << "[" << NetifeAgentImpl::dllName.value() << "::" << NetifeAgentImpl::className.value() << "] " << content;
+    }
 }
 
 bool NetifeAgentImpl::IsExisted(const string &dllName, const string &className) {
