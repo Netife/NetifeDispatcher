@@ -5,6 +5,7 @@
 #include "utils/logger.h"
 #include "lib/log/easylogging++.h"
 #include "plugins/v1/PluginsDispatcher.h"
+#include "services/NetifeStorage.h"
 #include <filesystem>
 
 INITIALIZE_EASYLOGGINGPP;
@@ -36,9 +37,9 @@ int main(int argc, char *argv[]) {
     Netife::logger::RegisterCommonLogger("PluginsDispatcher");
     Netife::logger::RegisterCommonLogger("Plugin");
     Netife::logger::RegisterCommonLogger("Script");
+    Netife::logger::RegisterCommonLogger("NetifeDataStorage");
     Netife::logger::RegisterCommonLogger("NetifeService");
     //初始化目录结构
-
     InitDirectoryStructure();
 
     //加载插件
@@ -93,6 +94,7 @@ void InitDirectoryStructure() {
     createDirIfNotExists("plugins\\config");
     createDirIfNotExists("plugins\\data");
     createDirIfNotExists("config");
+    createDirIfNotExists("data");
     createDirIfNotExists("scripts");
     createDirIfNotExists("scripts\\bin");
     createDirIfNotExists("scripts\\data");

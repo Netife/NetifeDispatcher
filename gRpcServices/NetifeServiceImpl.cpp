@@ -6,6 +6,7 @@
 #define ELPP_THREAD_SAFE
 #include "../plugins/v1/PluginsDispatcher.h"
 #include "../lib/log/easylogging++.h"
+#include "../services/NetifeStorage.h"
 namespace Netife {
     Status NetifeServiceImpl::ProcessProbe(ServerContext *context, const NetifeProbeRequest *request,
                                            NetifeProbeResponse *response) {
@@ -14,8 +15,19 @@ namespace Netife {
 
         // 请求进入
         //此处为发送给前端
+
+        //记录
+
+        Netife::NetifeStorage::Instance()->PushTransStream(request->uuid(), request->request_type(), request->application_type(),
+                                                           to_string(request->protocol()), request->dst_ip_addr(), request->dst_ip_port(),
+                                                           request->src_ip_addr(), request->src_ip_port(), request->is_raw_text(),
+                                                           request->has_uuid_sub() ? to_string(request->uuid_sub()) : "", request->raw_text(),
+                                                           request->has_pid() ? request->pid() : "",
+                                                           request->has_process_name() ? request->process_name() : "");
+
         bool isNormal = true;
         NetifeProbeRequest scriptRequest = *request;
+
         Netife::PluginsDispatcher::Instance()->ProcessMatchScripts(
                 request->raw_text(),[&](std::string name){
                     //插件事件 [进入脚本时]

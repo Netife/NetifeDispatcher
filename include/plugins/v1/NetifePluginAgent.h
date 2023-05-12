@@ -34,6 +34,15 @@ public:
     virtual std::map<std::string, std::string> WrapperCommandResultWithMap(const std::string& res) = 0;
     virtual std::optional<std::string> CarryPluginCommandWithVector(const std::string& commandPrefix, std::vector<std::string> params)  = 0;// 执行一个命令，得到返回值
     virtual std::optional<std::string> CarryPluginCommandWithMap(const std::string& commandPrefix, std::map<std::string, std::optional<std::string>> params)  = 0;// 执行一个命令，得到返回值
+    virtual std::optional<std::vector<std::string>> GetRawTextByUUID(std::string UUID, std::optional<std::string> UUID_Sub) = 0;
+    virtual std::optional<std::vector<std::string>> GetRawTextByPid(std::string Pid, std::optional<std::string> ProcessName) = 0;
+    virtual std::optional<std::vector<std::string>> GetRawTextByDst(std::string DstHost, std::optional<std::string> DstPort) = 0;
+    virtual std::optional<std::vector<std::string>> GetRawTextBySrc(std::string SrcHost, std::optional<std::string> SrcPort) = 0;
+    virtual void AddSettings(std::string key, std::string value) = 0;
+    virtual void UpdateSettings(std::string key, std::string value) = 0;
+    virtual void RemoveSettings(std::string key) = 0;
+    virtual bool ExitsSettings(std::string key) = 0;
+    virtual std::optional<std::string> GetSettings(std::string key) = 0;
 };
 
 

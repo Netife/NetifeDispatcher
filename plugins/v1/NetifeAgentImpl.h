@@ -28,6 +28,15 @@ public:
     std::optional<std::string> CarryPluginCommandWithVector(const std::string& commandPrefix, std::vector
             <string> params) override;// 执行一个命令，得到返回值
     std::optional<std::string> CarryPluginCommandWithMap(const std::string& commandPrefix, std::map<std::string, std::optional<std::string>> params) override;// 执行一个命令，得到返回值
+    std::optional<std::vector<std::string>> GetRawTextByUUID(std::string UUID, std::optional<std::string> UUID_Sub);
+    std::optional<std::vector<std::string>> GetRawTextByPid(std::string Pid, std::optional<std::string> ProcessName);
+    std::optional<std::vector<std::string>> GetRawTextByDst(std::string DstHost, std::optional<std::string> DstPort);
+    std::optional<std::vector<std::string>> GetRawTextBySrc(std::string SrcHost, std::optional<std::string> SrcPort);
+    void AddSettings(std::string key, std::string value) override;
+    void UpdateSettings(std::string key, std::string value) override;
+    void RemoveSettings(std::string key) override;
+    bool ExitsSettings(std::string key) override;
+    std::optional<std::string> GetSettings(std::string key) override;
 };
 
 

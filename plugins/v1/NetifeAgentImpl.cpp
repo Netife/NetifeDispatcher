@@ -12,6 +12,7 @@
 #include "../../lib/Poco/JSON/Parser.h"
 #include "../../lib/Poco/JSON/ParseHandler.h"
 #include "../../lib/Poco/JSON/Stringifier.h"
+#include "../../services/NetifeStorage.h"
 using namespace std;
 using Poco::JSON::Object;
 using Poco::JSON::Array;
@@ -139,4 +140,40 @@ std::map<std::string, std::string> NetifeAgentImpl::WrapperCommandResultWithMap(
         resBack.insert(std::pair<string, string>(item.first, item.second.toString()));
     }
     return resBack;
+}
+
+std::optional<std::vector<std::string>> NetifeAgentImpl::GetRawTextByUUID(std::string UUID, std::optional<std::string> UUID_Sub) {
+    return Netife::NetifeStorage::Instance()->GetRawTextByUUID(UUID, UUID_Sub);
+}
+
+std::optional<std::vector<std::string>> NetifeAgentImpl::GetRawTextByDst(std::string DstHost, std::optional<std::string> DstPort) {
+    return Netife::NetifeStorage::Instance()->GetRawTextByDst(DstHost, DstPort);
+}
+
+std::optional<std::vector<std::string>> NetifeAgentImpl::GetRawTextByPid(std::string Pid, std::optional<std::string> ProcessName) {
+    return Netife::NetifeStorage::Instance()->GetRawTextByPid(Pid, ProcessName);
+}
+
+std::optional<std::vector<std::string>> NetifeAgentImpl::GetRawTextBySrc(std::string SrcHost, std::optional<std::string> SrcPort) {
+    return Netife::NetifeStorage::Instance()->GetRawTextBySrc(SrcHost, SrcPort);
+}
+
+void NetifeAgentImpl::AddSettings(std::string key, std::string value) {
+    Netife::NetifeStorage::Instance()->AddSettings(NetifeAgentImpl::dllName.value(), NetifeAgentImpl::className.value(), key, value);
+}
+
+void NetifeAgentImpl::RemoveSettings(std::string key) {
+    Netife::NetifeStorage::Instance()->RemoveSettings(NetifeAgentImpl::dllName.value(), NetifeAgentImpl::className.value(), key);
+}
+
+bool NetifeAgentImpl::ExitsSettings(std::string key) {
+    return Netife::NetifeStorage::Instance()->ExitsSettings(NetifeAgentImpl::dllName.value(), NetifeAgentImpl::className.value(), key);
+}
+
+void NetifeAgentImpl::UpdateSettings(std::string key, std::string value) {
+    Netife::NetifeStorage::Instance()->UpdateSettings(NetifeAgentImpl::dllName.value(), NetifeAgentImpl::className.value(), key, value);
+}
+
+std::optional<std::string> NetifeAgentImpl::GetSettings(std::string key) {
+    return Netife::NetifeStorage::Instance()->GetSettings(NetifeAgentImpl::dllName.value(), NetifeAgentImpl::className.value(), key);
 }
