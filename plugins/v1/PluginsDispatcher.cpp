@@ -469,7 +469,7 @@ namespace Netife {
     void PluginsDispatcher::ProcessMatchScripts(const string& state, const function<void(std::string name)> &f) {
         for (const auto &item: scriptMaps){
             std::regex reg(item.second);
-            std::string beMatched = TextHelper::getBetween(state,"Host:","\r\n");
+            std::string beMatched = TextHelper::getBetween(state,"Host:","\r\n") + "/" + TextHelper::getBetween(state, "/", "HTTP");
             if (std::regex_match(beMatched, reg)){
                 auto temp = TextHelper::split(item.first, "::");
                 f( ";"+ temp[0] + ";" + temp[1].substr(1, temp[1].length()));

@@ -33,9 +33,13 @@ namespace Netife {
                         CLOG(WARNING,"NetifeService") << "The request was cancelled by plugin before script load: " << pluginsIntercept.UUID;
                     }
 
-                    scriptRequest.set_uuid(scriptRequest.uuid() + name);
+
                     auto response = jsRemote.ProcessScript(scriptRequest);
                     //修改一次，然后下次再传
+                    if (!response.has_value()){
+                        return ;
+                    }
+                    scriptRequest.set_uuid(scriptRequest.uuid());
                     scriptRequest.set_dst_ip_addr(response->dst_ip_addr());
                     scriptRequest.set_dst_ip_port(response->dst_ip_port());
                     scriptRequest.set_raw_text(response->response_text());
