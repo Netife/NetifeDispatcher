@@ -95,7 +95,7 @@ namespace Netife {
 
         // 根据文件路径打开数据库连接。如果数据库不存在，则创建。
         int result = sqlite3_open_v2(path, &sqliteClient,
-                                     SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX |
+                                     SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE |
                                      SQLITE_OPEN_SHAREDCACHE,
                                      nullptr);
 

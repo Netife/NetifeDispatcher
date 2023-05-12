@@ -485,6 +485,8 @@ namespace Netife {
         vector<string> beParams = TextHelper::split(iter->second.originCommand, " ");
         map<string, optional<string>> params;
         for (int i = 1; i < commandParams.size(); ++i) { //命令头
+            if (i > beParams.size() - 1)
+                return nullopt;
             params.insert(std::pair<string, optional<string>>(beParams[i].substr(1, beParams[i].length() - 2),
                                                               commandParams[i]));
         }
