@@ -25,6 +25,19 @@ namespace Netife{
         return res;
     }
 
+    std::vector<string> TextHelper::splitMulti(const string &str, const std::string &pattern){
+        vector<string> tokens;
+        size_t pos = 0;
+        std::string text(str);
+        string token;
+        while ((pos = text.find(pattern)) != string::npos) {
+            token = text.substr(0, pos);
+            text.erase(0, pos + pattern.length());
+            tokens.push_back(token);
+        }
+        tokens.push_back(text);
+    }
+
     std::string TextHelper::getBetween(const string &str, const string &left, const string &right) {
         string result = "";
         size_t left_pos = str.find(left);
