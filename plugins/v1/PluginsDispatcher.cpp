@@ -15,6 +15,7 @@
 #include "../../lib/Poco/Manifest.h"
 #include "../../include/plugins/v1/NetifePlugins.h"
 #include <regex>
+#include <utility>
 #include "PluginsDescriptor.h"
 #include "ScriptDescriptor.h"
 #include "NetifeAgentImpl.h"
@@ -280,37 +281,37 @@ namespace Netife {
         return true;
     }
 
-    void PluginsDispatcher::RegisterCommand(string command, string description, string pluginsName, string clsid,
+    void PluginsDispatcher::RegisterCommand(const string& command, string description, string pluginsName, string clsid,
                                             string className) {
         CommandDescriptor commandDescriptor;
-        commandDescriptor.pluginClsid = clsid;
+        commandDescriptor.pluginClsid = std::move(clsid);
         commandDescriptor.originCommand = command;
-        commandDescriptor.pluginName = pluginsName;
-        commandDescriptor.description = description;
-        commandDescriptor.className = className;
+        commandDescriptor.pluginName = std::move(pluginsName);
+        commandDescriptor.description = std::move(description);
+        commandDescriptor.className = std::move(className);
         commandLists.insert(
                 std::pair<string, CommandDescriptor>(TextHelper::split(command, " ")[0], commandDescriptor));
     }
 
-    void PluginsDispatcher::RegisterHook(string hookNode, string pluginsName, string clsid,
+    void PluginsDispatcher::RegisterHook(const string& hookNode, string pluginsName, string clsid,
                                          string symbol) {
         HookDescriptor hookDescriptor;
         hookDescriptor.hookNode = hookNode;
-        hookDescriptor.pluginName = pluginsName;
-        hookDescriptor.pluginClsid = clsid;
-        hookDescriptor.pluginSymbol = symbol;
+        hookDescriptor.pluginName = std::move(pluginsName);
+        hookDescriptor.pluginClsid = std::move(clsid);
+        hookDescriptor.pluginSymbol = std::move(symbol);
         hookLists.insert(std::pair<string, HookDescriptor>(hookNode, hookDescriptor));
     }
 
-    void PluginsDispatcher::RegisterPluginDescriptor(string pluginName, PluginsDescriptor descriptor) {
+    void PluginsDispatcher::RegisterPluginDescriptor(const string& pluginName, const PluginsDescriptor& descriptor) {
         pluginDescriptorLists.insert(std::pair<string, PluginsDescriptor>(pluginName, descriptor));
     }
 
-    void PluginsDispatcher::RegisterPluginClassMaps(string pluginClassWithClassName, NetifePlugins *netifePlugins) {
+    void PluginsDispatcher::RegisterPluginClassMaps(const string& pluginClassWithClassName, NetifePlugins *netifePlugins) {
         pluginClassMaps.insert(std::pair<string, NetifePlugins *>(pluginClassWithClassName, netifePlugins));
     }
 
-    void PluginsDispatcher::UnRegisterTargetPluginClass(string pluginClassName) {
+    void PluginsDispatcher::UnRegisterTargetPluginClass(const string& pluginClassName) {
         if (!pluginClassMaps[pluginClassName]->OnDisable()){
             CLOG(ERROR, "PluginsDispatcher")
                     << "Plugin " << pluginClassName << "cause erro when disabled !";
@@ -320,7 +321,7 @@ namespace Netife {
         pluginClassMaps.erase(pluginClassName);
     }
 
-    void PluginsDispatcher::UnRegisterTargetPluginLibrary(string pluginName) {
+    void PluginsDispatcher::UnRegisterTargetPluginLibrary(const string& pluginName) {
         fs::path basicPath = "plugins";
         pluginLoader.unloadLibrary((basicPath / "bin" / (pluginName + ".dll")).string());
     }
@@ -335,11 +336,11 @@ namespace Netife {
         }
     }
 
-    NetifePlugins* PluginsDispatcher::GetPluginInstance(string pluginClassWithClassName) {
+    NetifePlugins* PluginsDispatcher::GetPluginInstance(const string& pluginClassWithClassName) {
         return pluginClassMaps[pluginClassWithClassName];
     }
 
-    optional<string> PluginsDispatcher::UseRawCommand(string commandPrefix, string rawCommand) {
+    optional<string> PluginsDispatcher::UseRawCommand(const string& commandPrefix, const string& rawCommand) {
         auto iter = commandLists.find(commandPrefix);
         if(iter == commandLists.end()){
             return nullopt;
@@ -367,7 +368,7 @@ namespace Netife {
         return { res };
     }
 
-    void PluginsDispatcher::CarryHookPlugin(string hookNode) {
+    void PluginsDispatcher::CarryHookPlugin(const string& hookNode) {
         auto iter = hookLists.find(hookNode);
         if(iter == hookLists.end()){
             return;
@@ -381,11 +382,11 @@ namespace Netife {
         delete agent;
     }
 
-    void PluginsDispatcher::RegisterPluginSharedLibraries(string pluginName, SharedLibrary* sharedLibrary) {
+    void PluginsDispatcher::RegisterPluginSharedLibraries(const string& pluginName, SharedLibrary* sharedLibrary) {
         pluginSharedLibraries.insert(std::pair<string,SharedLibrary*>(pluginName, sharedLibrary));
     }
 
-    void PluginsDispatcher::UnRegisterTargetSharedLibrary(string pluginName) {
+    void PluginsDispatcher::UnRegisterTargetSharedLibrary(const string& pluginName) {
         pluginSharedLibraries[pluginName]->unload();
         pluginSharedLibraries.erase(pluginName);
     }
@@ -457,11 +458,11 @@ namespace Netife {
         return isWholeOk;
     }
 
-    void PluginsDispatcher::RegisterScriptDescriptor(std::string name, ScriptDescriptor scriptDescriptor) {
+    void PluginsDispatcher::RegisterScriptDescriptor(const std::string& name, const ScriptDescriptor& scriptDescriptor) {
         scriptDescriptorLists.insert(std::pair<string, ScriptDescriptor>(name,scriptDescriptor));
     }
 
-    void PluginsDispatcher::RegisterScriptFunction(std::string regex, std::string name) {
+    void PluginsDispatcher::RegisterScriptFunction(const std::string& regex, const std::string& name) {
         scriptMaps.insert(std::pair<string, string>(name,regex));
     }
 
@@ -480,7 +481,7 @@ namespace Netife {
         UnRegisterAllPlugins();
     }
 
-    optional<string> PluginsDispatcher::UseCommandByVector(string commandPrefix, vector<string> commandParams) {
+    optional<string> PluginsDispatcher::UseCommandByVector(const string& commandPrefix, vector<string> commandParams) {
         auto iter = commandLists.find(commandPrefix);
         if(iter == commandLists.end()){
             return nullopt;
@@ -501,13 +502,15 @@ namespace Netife {
             std::string name = beParams[i].substr(1, beParams[i].length() - 2);
             params.insert(std::pair<string, optional<string>>(name, nullopt)); //插入空值
         }
-
+        if (pluginClassMaps[plugin] == nullptr){
+            return nullopt;
+        }
         string res = pluginClassMaps[plugin]->DispatcherCommand(commandPrefix, params);
         return { res };
     }
 
     optional<string>
-    PluginsDispatcher::UseCommandByMap(string commandPrefix, map<string, optional<string>> commandParams) {
+    PluginsDispatcher::UseCommandByMap(const string& commandPrefix, map<string, optional<string>> commandParams) {
         auto iter = commandLists.find(commandPrefix);
         if(iter == commandLists.end()){
             return nullopt;

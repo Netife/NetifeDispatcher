@@ -8,6 +8,8 @@
 #include <optional>
 #include <filesystem>
 #include <utility>
+#include <map>
+#include <vector>
 class NetifePlugins;
 
 class NetifePluginAgent {
@@ -30,8 +32,7 @@ public:
     virtual std::string GetMainModuleDataPath() = 0; //得到主插件存储空间
     virtual std::string GetPluginDataPath() = 0; //得到插件实体类存储空间
     virtual std::map<std::string, std::string> WrapperCommandResultWithMap(const std::string& res) = 0;
-    virtual std::optional<std::string> CarryPluginCommandWithVector(const std::string& commandPrefix, std::vector
-    <string> params)  = 0;// 执行一个命令，得到返回值
+    virtual std::optional<std::string> CarryPluginCommandWithVector(const std::string& commandPrefix, std::vector<std::string> params)  = 0;// 执行一个命令，得到返回值
     virtual std::optional<std::string> CarryPluginCommandWithMap(const std::string& commandPrefix, std::map<std::string, std::optional<std::string>> params)  = 0;// 执行一个命令，得到返回值
 };
 

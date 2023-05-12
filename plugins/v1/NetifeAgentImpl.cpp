@@ -135,7 +135,7 @@ std::map<std::string, std::string> NetifeAgentImpl::WrapperCommandResultWithMap(
     Parser parser;
     var::Var result = parser.parse(res); // 解析 JSON 文件
     Object::Ptr node = result.extract<Object::Ptr>(); // 获取 JSON 对象
-    for (auto item:*node) {
+    for (const auto& item:*node) {
         resBack.insert(std::pair<string, string>(item.first, item.second.toString()));
     }
     return resBack;

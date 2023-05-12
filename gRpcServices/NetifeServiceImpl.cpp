@@ -247,7 +247,7 @@ namespace Netife {
                                       NetifePluginCommandResponse *response) {
 
         vector<string> params;
-        params.push_back(request->command_prefix());
+
         for (const auto &item: request->params()){
             params.push_back(item);
         }
