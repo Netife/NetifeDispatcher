@@ -489,7 +489,7 @@ namespace Netife {
         string plugin = iter->second.pluginName + "::" + iter->second.className;
         vector<string> beParams = TextHelper::split(iter->second.originCommand, " ");
         map<string, optional<string>> params;
-        for (int i = 1; i < beParams.size(); ++i) { //命令头
+        for (int i = 1; i < commandParams.size(); ++i) { //命令头
             params.insert(std::pair<string, optional<string>>(beParams[i].substr(1, beParams[i].length() - 2),
                                                               commandParams[i]));
         }
