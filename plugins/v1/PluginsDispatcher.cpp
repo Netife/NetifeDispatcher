@@ -142,36 +142,40 @@ namespace Netife {
             //加载动态类
 
             pluginLoader.loadLibrary((basicPath / "bin" / plugin.path().filename()).string());
-            PluginLoader::Iterator it(pluginLoader.begin());
-            PluginLoader::Iterator end(pluginLoader.end());
-            for (; it != end; ++it) {
-                PluginManifest::Iterator itMan(it->second->begin());
-                PluginManifest::Iterator endMan(it->second->end());
-                for (; itMan != endMan; ++itMan) {
-                    CLOG(INFO, "PluginsDispatcher") << "Load plugin class "
-                                                    << itMan->name() << " in plugin library \""
-                                                    << pluginsDescriptor.name << "\"";
-                    NetifePlugins *netifePlugin = pluginLoader.create(itMan->name());
-                    RegisterPluginClassMaps(pluginsDescriptor.name + "::" + itMan->name(),
-                                            netifePlugin);
-                    NetifePluginAgent *agent = new NetifeAgentImpl(true, pluginsDescriptor.name, itMan->name());
-                    netifePlugin->SetNetifePluginAgent(agent);
-                    CLOG(INFO, "PluginsDispatcher") << "[" << pluginsDescriptor.name << "]["
-                                                    << itMan->name() << "] Name:\"" << netifePlugin->GetName() << "\""
-                                                    << " Version\"" << netifePlugin->GetVersion() << "\"";
-                    if (!netifePlugin->OnEnable()) {
-                        CLOG(WARNING, "PluginsDispatcher") << "[" << pluginsDescriptor.name << "]["
-                                                           << itMan->name() << "] Plugin actively refuse to load.";
-                        //@NETIFE RULE 一个插件的主动拒绝不会导致框架寄掉，但是框架会抛出提示
-                        CLOG(WARNING, "PluginsDispatcher")
-                                << "In Netife Rules a plugin actively refuse will not prevent "
-                                   "the rest plugin load and framework running. However, it maybe cause "
-                                   "some trouble like relation and command error.";
-                        UnRegisterTargetPluginLibrary(pluginsDescriptor.name + "::" + itMan->name());
-                    }
+        }
 
-                    NetifeStorage::Instance()->BuildDataTable(pluginsDescriptor.name, itMan->name());
+        PluginLoader::Iterator it(pluginLoader.begin());
+        PluginLoader::Iterator end(pluginLoader.end());
+        for (; it != end; ++it) {
+            PluginManifest::Iterator itMan(it->second->begin());
+            PluginManifest::Iterator endMan(it->second->end());
+            for (; itMan != endMan; ++itMan) {
+                vector<std::string> pathTemp = TextHelper::split(it->first, "\\");
+                std::string dllName = pathTemp[2].substr(0, pathTemp[2].length() - 4);
+                CLOG(INFO, "PluginsDispatcher") << "Load plugin class "
+                                                << itMan->name() << " in plugin library \""
+                                                << it->first << "\"";
+                NetifePlugins *netifePlugin = pluginLoader.create(itMan->name());
+                RegisterPluginClassMaps(dllName + "::" + itMan->name(),
+                                        netifePlugin);
+                //TODO agent 指针维护
+                NetifePluginAgent *agent = new NetifeAgentImpl(true, dllName, itMan->name());
+                netifePlugin->SetNetifePluginAgent(agent);
+                CLOG(INFO, "PluginsDispatcher") << "[" << dllName << "]["
+                                                << itMan->name() << "] Name:\"" << netifePlugin->GetName() << "\""
+                                                << " Version\"" << netifePlugin->GetVersion() << "\"";
+                if (!netifePlugin->OnEnable()) {
+                    CLOG(WARNING, "PluginsDispatcher") << "[" << dllName << "]["
+                                                       << itMan->name() << "] Plugin actively refuse to load.";
+                    //@NETIFE RULE 一个插件的主动拒绝不会导致框架寄掉，但是框架会抛出提示
+                    CLOG(WARNING, "PluginsDispatcher")
+                            << "In Netife Rules a plugin actively refuse will not prevent "
+                               "the rest plugin load and framework running. However, it maybe cause "
+                               "some trouble like relation and command error.";
+                    UnRegisterTargetPluginLibrary(dllName + "::" + itMan->name());
                 }
+
+                NetifeStorage::Instance()->BuildDataTable(dllName, itMan->name());
             }
         }
 
@@ -403,7 +407,6 @@ namespace Netife {
                 continue;
             }
 
-
             ifstream jsonFile(filePath);
             Parser parser;
             var::Var result = parser.parse(jsonFile); // 解析 JSON 文件
@@ -444,7 +447,7 @@ namespace Netife {
                 Object::Ptr obj = hookUrls->getObject(i);
                 RegisterScriptFunction(obj->get("regex").toString(),
                                        scriptDescriptor.name + "::" + obj->get("exportFunctionName").toString());
-                CLOG(WARNING, "PluginsDispatcher") << "Load script " << scriptDescriptor.name + "::" +
+                CLOG(INFO, "PluginsDispatcher") << "Load script " << scriptDescriptor.name + "::" +
                                                                         obj->get("exportFunctionName").toString();
             }
         }

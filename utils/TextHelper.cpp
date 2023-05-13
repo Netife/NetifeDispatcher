@@ -36,6 +36,7 @@ namespace Netife{
             tokens.push_back(token);
         }
         tokens.push_back(text);
+        return tokens;
     }
 
     std::string TextHelper::getBetween(const string &str, const string &left, const string &right) {
