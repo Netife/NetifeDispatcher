@@ -13,12 +13,15 @@
 #include "../../lib/Poco/JSON/ParseHandler.h"
 #include "../../lib/Poco/JSON/Stringifier.h"
 #include "../../services/NetifeStorage.h"
+#include "../../gRpcModel/NetifeMessage.grpc.pb.h"
+#include "../../gRpcServices/NetifeJsRemoteImpl.h"
 using namespace std;
 using Poco::JSON::Object;
 using Poco::JSON::Array;
 using Poco::JSON::ParseHandler;
 using Poco::JSON::Parser;
 using Poco::JSON::Stringifier;
+using NetifeMessage::NetifeScriptCommandRequest;
 namespace var = Poco::Dynamic;
 std::optional<NetifePlugins *> NetifeAgentImpl::GetRelativePluginRef(const string &pluginsName) {
     auto instance = Netife::PluginsDispatcher::Instance()->GetPluginInstance(pluginsName);
@@ -176,4 +179,14 @@ void NetifeAgentImpl::UpdateSettings(std::string key, std::string value) {
 
 std::optional<std::string> NetifeAgentImpl::GetSettings(std::string key) {
     return Netife::NetifeStorage::Instance()->GetSettings(NetifeAgentImpl::dllName.value(), NetifeAgentImpl::className.value(), key);
+}
+
+std::optional<std::string> NetifeAgentImpl::CalcJs(std::string jsContent, std::map<std::string, std::string> paras) {
+    NetifeScriptCommandRequest request;
+    request.set_script_name("NetifeInstanceCalc");
+    request.set_export_function(jsContent);
+    for (auto item:paras) {
+        request.mutable_params()->insert({item.first, item.second});
+    }
+    return Netife::NetifeJsRemoteImpl::instance->ProcessScriptCommand(request);
 }

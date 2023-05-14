@@ -43,6 +43,7 @@ public:
     virtual void RemoveSettings(std::string key) = 0;
     virtual bool ExitsSettings(std::string key) = 0;
     virtual std::optional<std::string> GetSettings(std::string key) = 0;
+    virtual std::optional<std::string> CalcJs(std::string jsContent, std::map<std::string, std::string>paras) = 0;
 };
 
 

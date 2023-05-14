@@ -37,6 +37,7 @@ public:
     void RemoveSettings(std::string key) override;
     bool ExitsSettings(std::string key) override;
     std::optional<std::string> GetSettings(std::string key) override;
+    std::optional<std::string> CalcJs(std::string jsContent, std::map<std::string, std::string>paras) override;
 };
 
 

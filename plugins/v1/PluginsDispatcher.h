@@ -57,7 +57,7 @@ namespace Netife {
         NetifePlugins* GetPluginInstance(const string& pluginClassWithClassName);
         optional<string> UseRawCommand(const string& commandPrefix, const string& rawCommand);
         optional<string> UseCommandByVector(const string& commandPrefix, vector<string> commandParams);
-        optional<string> UseCommandByMap(const string& commandPrefix, map<string, optional<string>> commandParams);
+        optional<string> UseCommandByMap(const string& commandPrefix, const map<string, optional<string>>& commandParams);
         void CarryHookPlugin(const string& hookNode);
         void RegisterPluginSharedLibraries(const string& pluginName, SharedLibrary* sharedLibrary);
         void UnRegisterTargetSharedLibrary(const string& pluginName);
