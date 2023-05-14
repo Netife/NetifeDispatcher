@@ -15,6 +15,7 @@ service NetifeService {
 // 消息上报
 service NetifePost{
     rpc UploadRequest (NetifeProbeRequest) returns (NetifeProbeResponse); // [已发布]
+    rpc UseScriptCommand (NetifeScriptCommandRequest) returns (NetifeScriptCommandResponse); // [已发布]
 }
 
 // 定义 Netife Probe 的请求信息的数据结构
@@ -137,7 +138,7 @@ message NetifePluginCommandRequest {
 
     string command_prefix = 2; // 表示插件的命令头
 
-    repeated string params = 3; // 表示携带的参数，
+    repeated string params = 3; // 表示携带的参数
 
     optional string uuid = 4; // 附带消息的 UUID 选项
 
@@ -193,4 +194,19 @@ message NetifeScriptDebuggerResponse { //[弃用]
     string ws_addr = 1; // 调试使用的 WS 的地址
 
     string ws_port = 2; // 调试使用的 WS 的端口
+}
+
+message NetifeScriptCommandRequest {
+
+    string script_name = 1;
+
+    string export_function = 2;
+
+    map<string ,string> params = 3;
+
+}
+
+message NetifeScriptCommandResponse {
+
+    string result = 1;
 }

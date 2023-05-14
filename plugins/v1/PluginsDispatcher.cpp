@@ -20,6 +20,8 @@
 #include "ScriptDescriptor.h"
 #include "NetifeAgentImpl.h"
 #include "../../services/NetifeStorage.h"
+#include "../../gRpcModel/NetifeMessage.grpc.pb.h"
+#include "../../gRpcServices/NetifeJsRemoteImpl.h"
 #define PLUGINS_DISPATCHER_VERSION "v1"
 
 using namespace std;
@@ -29,6 +31,7 @@ using Poco::JSON::Array;
 using Poco::JSON::ParseHandler;
 using Poco::JSON::Parser;
 using Poco::JSON::Stringifier;
+using NetifeMessage::NetifeScriptCommandRequest;
 
 namespace fs = std::filesystem;
 namespace var = Poco::Dynamic;
@@ -76,7 +79,6 @@ namespace Netife {
                 continue;
             }
 
-
             ifstream jsonFile(filePath);
             Parser parser;
             var::Var result = parser.parse(jsonFile); // 解析 JSON 文件
@@ -85,6 +87,7 @@ namespace Netife {
                 CLOG(WARNING, "PluginsDispatcher") << "THE PLUGINS DISPATCHER "
                                                       "VERSION IS NOT FULFILLED WITH THIS CORE. IT MAY CAUSE SOME PROBLEMS";
             }
+
             PluginsDescriptor pluginsDescriptor;
             pluginsDescriptor.name = node->get("name").toString();
             pluginsDescriptor.clsid = node->get("clsid").toString();
@@ -295,13 +298,14 @@ namespace Netife {
     }
 
     void PluginsDispatcher::RegisterCommand(const string &command, string description, string pluginsName, string clsid,
-                                            string className) {
+                                            string className, bool isPluginCommand) {
         CommandDescriptor commandDescriptor;
         commandDescriptor.pluginClsid = std::move(clsid);
         commandDescriptor.originCommand = command;
         commandDescriptor.pluginName = std::move(pluginsName);
         commandDescriptor.description = std::move(description);
         commandDescriptor.className = std::move(className);
+        commandDescriptor.isPluginCommand = isPluginCommand;
         commandLists.insert(
                 std::pair<string, CommandDescriptor>(TextHelper::split(command, " ")[0], commandDescriptor));
     }
@@ -450,12 +454,22 @@ namespace Netife {
                 CLOG(INFO, "PluginsDispatcher") << "Load script " << scriptDescriptor.name + "::" +
                                                                         obj->get("exportFunctionName").toString();
             }
+
+            //注册自由命令
+
+            Array::Ptr commandLists = node->getArray("exportCommand");
+            for (int i = 0; i < commandLists->size(); ++i) {
+                Object::Ptr obj = commandLists->getObject(i);
+                RegisterCommand(obj->get("command").toString(), obj->get("description").toString(),
+                                scriptDescriptor.name, scriptDescriptor.clsid,
+                                obj->get("exportFunctionName").toString(), false);
+            }
+
         }
         return isWholeOk;
     }
 
-    void
-    PluginsDispatcher::RegisterScriptDescriptor(const std::string &name, const ScriptDescriptor &scriptDescriptor) {
+    void PluginsDispatcher::RegisterScriptDescriptor(const std::string &name, const ScriptDescriptor &scriptDescriptor) {
         scriptDescriptorLists.insert(std::pair<string, ScriptDescriptor>(name, scriptDescriptor));
     }
 
@@ -484,29 +498,56 @@ namespace Netife {
         if (iter == commandLists.end()) {
             return nullopt;
         }
-        string plugin = iter->second.pluginName + "::" + iter->second.className;
-        vector<string> beParams = TextHelper::split(iter->second.originCommand, " ");
-        map<string, optional<string>> params;
-        for (int i = 1; i < commandParams.size(); ++i) { //命令头
-            if (i > beParams.size() - 1)
-                return nullopt;
-            params.insert(std::pair<string, optional<string>>(beParams[i].substr(1, beParams[i].length() - 2),
-                                                              commandParams[i]));
-        }
-
-        for (int i = commandParams.size() - 1; i < beParams.size() - 1; ++i) {
-            //例如 实际上传入了 2 个参数，但是要求有3个参数。那么就是 int i = 2 < 3 再执行一次
-            if (beParams[i][0] != '<') {
-                return nullopt; //不是 < 那就不是可选的，那么就说明出错了。
+        if (iter->second.isPluginCommand){
+            string plugin = iter->second.pluginName + "::" + iter->second.className;
+            vector<string> beParams = TextHelper::split(iter->second.originCommand, " ");
+            map<string, optional<string>> params;
+            for (int i = 1; i < commandParams.size(); ++i) { //命令头
+                if (i > beParams.size() - 1)
+                    return nullopt;
+                params.insert(std::pair<string, optional<string>>(beParams[i].substr(1, beParams[i].length() - 2),
+                                                                  commandParams[i]));
             }
-            std::string name = beParams[i].substr(1, beParams[i].length() - 2);
-            params.insert(std::pair<string, optional<string>>(name, nullopt)); //插入空值
+
+            for (int i = commandParams.size() - 1; i < beParams.size() - 1; ++i) {
+                //例如 实际上传入了 2 个参数，但是要求有3个参数。那么就是 int i = 2 < 3 再执行一次
+                if (beParams[i][0] != '<') {
+                    return nullopt; //不是 < 那就不是可选的，那么就说明出错了。
+                }
+                std::string name = beParams[i].substr(1, beParams[i].length() - 2);
+                params.insert(std::pair<string, optional<string>>(name, nullopt)); //插入空值
+            }
+            if (pluginClassMaps[plugin] == nullptr) {
+                return nullopt;
+            }
+            string res = pluginClassMaps[plugin]->DispatcherCommand(commandPrefix, params);
+            return {res};
+        }else{
+
+            NetifeScriptCommandRequest request;
+            request.set_script_name(iter->second.pluginName);
+            request.set_export_function(iter->second.className);
+
+            vector<string> beParams = TextHelper::split(iter->second.originCommand, " ");
+
+            for (int i = 1; i < commandParams.size(); ++i) { //命令头
+                if (i > beParams.size() - 1)
+                    return nullopt;
+                request.mutable_params()->insert({ beParams[i].substr(1, beParams[i].length() - 2)
+                                                   , commandParams[i]});
+            }
+
+            for (int i = commandParams.size() - 1; i < beParams.size() - 1; ++i) {
+                //例如 实际上传入了 2 个参数，但是要求有3个参数。那么就是 int i = 2 < 3 再执行一次
+                if (beParams[i][0] != '<') {
+                    return nullopt; //不是 < 那就不是可选的，那么就说明出错了。
+                }
+                std::string name = beParams[i].substr(1, beParams[i].length() - 2);
+                request.mutable_params()->insert({ name, ""});//插入空值
+            }
+
+            return NetifeJsRemoteImpl::instance->ProcessScriptCommand(request);
         }
-        if (pluginClassMaps[plugin] == nullptr) {
-            return nullopt;
-        }
-        string res = pluginClassMaps[plugin]->DispatcherCommand(commandPrefix, params);
-        return {res};
     }
 
     optional<string>
@@ -515,8 +556,20 @@ namespace Netife {
         if (iter == commandLists.end()) {
             return nullopt;
         }
-        string plugin = iter->second.pluginName + "::" + iter->second.className;
-        string res = pluginClassMaps[plugin]->DispatcherCommand(commandPrefix, commandParams);
-        return {res};
+        if (iter->second.isPluginCommand){
+            string plugin = iter->second.pluginName + "::" + iter->second.className;
+            string res = pluginClassMaps[plugin]->DispatcherCommand(commandPrefix, commandParams);
+            return {res};
+        }else{
+            NetifeScriptCommandRequest request;
+            request.set_script_name(iter->second.pluginName);
+            request.set_export_function(iter->second.className);
+            for (auto item:commandParams) {
+                std::string value = item.second.has_value() ? item.second.value() : "";
+                request.mutable_params()->insert({item.first, value});
+            }
+
+            return NetifeJsRemoteImpl::instance->ProcessScriptCommand(request);
+        }
     }
 } // Netife

@@ -46,7 +46,8 @@ namespace Netife {
         static PluginsDispatcher *Instance();
         bool AutoLoadPlugins();
         bool AutoLoadScripts();
-        void RegisterCommand(const string& command, string description, string pluginsName, string clsid, string className);
+        void RegisterCommand(const string &command, string description, string pluginsName, string clsid,
+                             string className, bool isPluginCommand = true);
         void RegisterHook(const string& hookNode, string pluginsName, string clsid, string symbol);
         void RegisterPluginDescriptor(const string& pluginName, const PluginsDescriptor& descriptor);
         void RegisterPluginClassMaps(const string& pluginClassWithClassName, NetifePlugins* netifePlugins);

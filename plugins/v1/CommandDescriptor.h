@@ -15,6 +15,7 @@ namespace Netife {
         string pluginName;
         string pluginClsid;
         string className;
+        bool isPluginCommand;
     };
 
 } // Netife
