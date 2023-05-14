@@ -184,7 +184,7 @@ std::optional<std::string> NetifeAgentImpl::GetSettings(std::string key) {
 std::optional<std::string> NetifeAgentImpl::CalcJs(std::string jsContent, std::map<std::string, std::string> paras) {
     NetifeScriptCommandRequest request;
     request.set_script_name("NetifeInstanceCalc");
-    request.set_export_function(jsContent);
+    request.set_export_function("module.exports = " + jsContent);
     for (auto item:paras) {
         request.mutable_params()->insert({item.first, item.second});
     }
