@@ -17,7 +17,7 @@ namespace Netife {
         //此处为发送给前端
 
         //记录
-
+        
         Netife::NetifeStorage::Instance()->PushTransStream(request->uuid(), request->request_type(), request->application_type(),
                                                            to_string(request->protocol()), request->dst_ip_addr(), request->dst_ip_port(),
                                                            request->src_ip_addr(), request->src_ip_port(), request->is_raw_text(),
@@ -28,105 +28,108 @@ namespace Netife {
         bool isNormal = true;
         NetifeProbeRequest scriptRequest = *request;
 
-        Netife::PluginsDispatcher::Instance()->ProcessMatchScripts(
-                request->raw_text(),[&](std::string name){
-                    //插件事件 [进入脚本时]
+        try {
+            Netife::PluginsDispatcher::Instance()->ProcessMatchScripts(
+                    request->raw_text(),[&](std::string name){
+                        //插件事件 [进入脚本时]
 
-                    //[事件] 进入脚本前
-                    auto pluginsIntercept = TransNetifeProbeRequest(const_cast<const NetifeProbeRequest*>(&scriptRequest));
+                        //[事件] 进入脚本前
+                        auto pluginsIntercept = TransNetifeProbeRequest(const_cast<const NetifeProbeRequest*>(&scriptRequest));
 
-                    Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
-                            ([&](NetifePlugins* plugins)
-                            { isNormal &= plugins->OnUseScript(
-                                    scriptRequest.uuid() + name, &pluginsIntercept); });
-                    TransNetWorkRequest(pluginsIntercept, &scriptRequest);
+                        Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
+                                ([&](NetifePlugins* plugins)
+                                 { isNormal &= plugins->OnUseScript(
+                                         scriptRequest.uuid() + name, &pluginsIntercept); });
+                        TransNetWorkRequest(pluginsIntercept, &scriptRequest);
 
-                    if (!isNormal){
-                        CLOG(WARNING,"NetifeService") << "The request was cancelled by plugin before script load: " << pluginsIntercept.UUID;
+                        if (!isNormal){
+                            CLOG(WARNING,"NetifeService") << "The request was cancelled by plugin before script load: " << pluginsIntercept.UUID;
+                        }
+
+
+                        auto response = jsRemote.ProcessScript(scriptRequest);
+                        //修改一次，然后下次再传
+                        if (!response.has_value()){
+                            return ;
+                        }
+                        scriptRequest.set_uuid(scriptRequest.uuid());
+                        scriptRequest.set_dst_ip_addr(response->dst_ip_addr());
+                        scriptRequest.set_dst_ip_port(response->dst_ip_port());
+                        scriptRequest.set_raw_text(response->response_text());
+
+                        //[事件] 离开脚本后
+
+                        pluginsIntercept = TransNetifeProbeRequest(const_cast<const NetifeProbeRequest*>(&scriptRequest));
+
+                        Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
+                                ([&](NetifePlugins* plugins)
+                                 { isNormal &= plugins->OnExitScript(
+                                         scriptRequest.uuid() + name, &pluginsIntercept); });
+                        TransNetWorkRequest(pluginsIntercept, &scriptRequest);
+
+                        if (!isNormal){
+                            CLOG(WARNING,"NetifeService") << "The request was cancelled by plugin before script load: " << pluginsIntercept.UUID;
+                        }
                     }
+            );
+            //最后得到新的request
+
+            if (!isNormal){
+                return Status::CANCELLED;
+            }
+
+            bool canInto = true;
+
+            const NetifeProbeRequest* scriptRequestConst = &scriptRequest;
+
+            NetworkRequest networkRequest = TransNetifeProbeRequest(scriptRequestConst);
+
+            //此处为事件捕获
+
+            Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
+                    ([&](NetifePlugins* plugins){ canInto &= plugins->OnRequestSendingOut(&networkRequest); });
+            if (!canInto){
+                CLOG(WARNING,"NetifeService") << "The request was cancelled by plugin in plugin event: " << networkRequest.UUID;
+                return Status::CANCELLED;
+            }
+
+            //此处为事件触发
+            //TODO 此处改成多线程调用
+
+            Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
+                    ([networkRequest](NetifePlugins* plugins){ plugins->OnRequestTrigger(networkRequest); });
+
+            NetifeProbeRequest netifeProbeRequest;
+            TransNetWorkRequest(networkRequest, &netifeProbeRequest);
+            auto netifeResponse = client.UploadRequest(netifeProbeRequest);
+            if (!netifeResponse.has_value()){
+                CLOG(WARNING,"NetifeService") << "The response was cancelled by frontend: " << networkRequest.UUID;
+                return Status::CANCELLED;
+            }
+
+            NetworkResponse networkResponse = TransNetifeProbeResponse(&(netifeResponse.value()));
+
+            //此处为回调事件捕获
+
+            Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
+                    ([&](NetifePlugins* plugins){ canInto &=  plugins->OnResponseBackingIn(&networkResponse); });
 
 
-                    auto response = jsRemote.ProcessScript(scriptRequest);
-                    //修改一次，然后下次再传
-                    if (!response.has_value()){
-                        return ;
-                    }
-                    scriptRequest.set_uuid(scriptRequest.uuid());
-                    scriptRequest.set_dst_ip_addr(response->dst_ip_addr());
-                    scriptRequest.set_dst_ip_port(response->dst_ip_port());
-                    scriptRequest.set_raw_text(response->response_text());
+            if (!canInto){
+                CLOG(WARNING,"NetifeService") << "The response was cancelled by plugin in plugin slot event: " << networkRequest.UUID;
+                return Status::CANCELLED;
+            }
 
-                    //[事件] 离开脚本后
+            //此处为事件触发
+            //TODO 此处改成多线程调用
 
-                    pluginsIntercept = TransNetifeProbeRequest(const_cast<const NetifeProbeRequest*>(&scriptRequest));
+            Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
+                    ([networkResponse](NetifePlugins* plugins){ plugins->OnResponseTrigger(networkResponse); });
 
-                    Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
-                            ([&](NetifePlugins* plugins)
-                             { isNormal &= plugins->OnExitScript(
-                                     scriptRequest.uuid() + name, &pluginsIntercept); });
-                    TransNetWorkRequest(pluginsIntercept, &scriptRequest);
-
-                    if (!isNormal){
-                        CLOG(WARNING,"NetifeService") << "The request was cancelled by plugin before script load: " << pluginsIntercept.UUID;
-                    }
-                }
-        );
-        //最后得到新的request
-
-        if (!isNormal){
-            return Status::CANCELLED;
+            TransNetWorkResponse(networkResponse, response);
+        } catch (exception& e) {
+            CLOG(ERROR,"NetifeService") << "Plugin EventSlot Error:" << e.what();
         }
-
-        bool canInto = true;
-
-        const NetifeProbeRequest* scriptRequestConst = &scriptRequest;
-
-        NetworkRequest networkRequest = TransNetifeProbeRequest(scriptRequestConst);
-
-        //此处为事件捕获
-
-        Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
-            ([&](NetifePlugins* plugins){ canInto &= plugins->OnRequestSendingOut(&networkRequest); });
-        if (!canInto){
-            CLOG(WARNING,"NetifeService") << "The request was cancelled by plugin in plugin event: " << networkRequest.UUID;
-            return Status::CANCELLED;
-        }
-
-        //此处为事件触发
-        //TODO 此处改成多线程调用
-
-        Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
-                ([networkRequest](NetifePlugins* plugins){ plugins->OnRequestTrigger(networkRequest); });
-
-        NetifeProbeRequest netifeProbeRequest;
-        TransNetWorkRequest(networkRequest, &netifeProbeRequest);
-        auto netifeResponse = client.UploadRequest(netifeProbeRequest);
-        if (!netifeResponse.has_value()){
-            CLOG(WARNING,"NetifeService") << "The response was cancelled by frontend: " << networkRequest.UUID;
-            return Status::CANCELLED;
-        }
-
-        NetworkResponse networkResponse = TransNetifeProbeResponse(&(netifeResponse.value()));
-
-        //此处为回调事件捕获
-
-        Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
-            ([&](NetifePlugins* plugins){ canInto &=  plugins->OnResponseBackingIn(&networkResponse); });
-
-
-        if (!canInto){
-            CLOG(WARNING,"NetifeService") << "The response was cancelled by plugin in plugin slot event: " << networkRequest.UUID;
-            return Status::CANCELLED;
-        }
-
-        //此处为事件触发
-        //TODO 此处改成多线程调用
-
-        Netife::PluginsDispatcher::Instance()->ProcessAllPlugins
-                ([networkResponse](NetifePlugins* plugins){ plugins->OnResponseTrigger(networkResponse); });
-
-        TransNetWorkResponse(networkResponse, response);
-
         return Status::OK;
     }
 
